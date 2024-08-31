@@ -1,32 +1,18 @@
+
 package com.uade.tpo.demo.service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
-import com.uade.tpo.demo.Entity.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import com.uade.tpo.demo.entity.Category;
 import com.uade.tpo.demo.exceptions.CategoryDuplicateException;
-import com.uade.tpo.demo.repository.CategoryRepository;
 
-public class CategoryService {
-    private CategoryRepository categoryRepository;
+public interface CategoryService {
+    public Page<Category> getCategories(PageRequest pageRequest);
 
-    public CategoryService() {
-        categoryRepository = new CategoryRepository();
-    }
+    public Optional<Category> getCategoryById(Long categoryId);
 
-    public ArrayList<Category> getCategories() {
-        return categoryRepository.getCategories();
-    }
-
-    public Optional<Category> getCategoryById(int categoryId) {
-        return categoryRepository.getCategoryById(categoryId);
-    }
-
-    public Category createCategory(int newCategoryId, String description) throws CategoryDuplicateException {
-        ArrayList<Category> categories = categoryRepository.getCategories();
-        if (categories.stream().anyMatch(
-                category -> category.getId() == newCategoryId && category.getDescription().equals(description)))
-            throw new CategoryDuplicateException();
-        return categoryRepository.createCategory(newCategoryId, description);
-    }
+    public Category createCategory(String description) throws CategoryDuplicateException;
 }
