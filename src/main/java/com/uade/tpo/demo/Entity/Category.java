@@ -1,4 +1,4 @@
-package com.uade.tpo.demo.entity;
+package com.uade.tpo.demo.Entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

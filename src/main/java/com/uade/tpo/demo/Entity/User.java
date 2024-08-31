@@ -1,4 +1,4 @@
-package com.uade.tpo.demo.entity;
+package com.uade.tpo.demo.Entity;
 
 import java.util.Collection;
 import java.util.List;
