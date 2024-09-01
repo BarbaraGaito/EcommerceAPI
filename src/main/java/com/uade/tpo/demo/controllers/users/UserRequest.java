@@ -11,7 +11,7 @@ public class UserRequest {
     private String name;
     private String firstName;
     private String lastname;
-    private String usertype;
+    private String Usertype;
 
 
 }
