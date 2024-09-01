@@ -11,7 +11,7 @@ import com.uade.tpo.demo.controllers.auth.AuthenticationRequest;
 import com.uade.tpo.demo.controllers.auth.AuthenticationResponse;
 import com.uade.tpo.demo.controllers.auth.RegisterRequest;
 import com.uade.tpo.demo.controllers.config.JwtService;
-import com.uade.tpo.demo.entity.User;
+import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;

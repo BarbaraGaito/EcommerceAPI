@@ -1,6 +1,6 @@
 package com.uade.tpo.demo.controllers.auth;
 
-import com.uade.tpo.demo.entity.Role;
+import com.uade.tpo.demo.Entity.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
