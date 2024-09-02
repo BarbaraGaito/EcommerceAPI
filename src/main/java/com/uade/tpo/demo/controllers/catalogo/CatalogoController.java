@@ -3,8 +3,9 @@ package com.uade.tpo.demo.controllers.catalogo;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,38 +17,34 @@ import com.uade.tpo.demo.Entity.Product;
 import com.uade.tpo.demo.service.CatalogoService;
 
 @RestController
-@RequestMapping("/api/catalogo")
+@RequestMapping("/api/catalog")
 public class CatalogoController {
 
     @Autowired
     private CatalogoService catalogoService;
 
+    /**
+     * Crea un nuevo catálogo.
+     *
+     * @param catalogo El objeto Catalogo a ser creado.
+     * @return El catálogo creado.
+     */
     @PostMapping
-    public Catalogo createCatalogo(@RequestBody Catalogo catalogo) {
-        return catalogoService.createCatalogo(catalogo);
+    public ResponseEntity<Catalogo> createCatalogo(@RequestBody Catalogo catalogo) {
+        Catalogo createdCatalogo = catalogoService.createCatalogo(catalogo);
+        return new ResponseEntity<>(createdCatalogo, HttpStatus.CREATED);
     }
 
-    // Método para obtener todos los productos
-    @GetMapping("/productos")
-    public List<Product> getAllProducts() {
-        return (List<Product>) catalogoService.listarProductosJSON();
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getAllProductsInCatalog() {
+        List<Product> products = catalogoService.getAllProductsFromCatalog();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    // Método para obtener el detalle de un producto por su ID
-    @GetMapping("/productos/{productId}")
-    public Product getProductDetail(@PathVariable Long productId) {
-        return catalogoService.getProductDetail(productId);
-    }
-
-    // Método para filtrar productos por categoría
-    @GetMapping("/filtrar")
-    public List<Product> filterByCategory(@RequestParam String category) {
-        return catalogoService.filterByCategory(category);
-    }
-
-    // Método para agregar productos al carrito
-    @PostMapping("/{carritoId}/productos/{productId}/agregarCarrito")
-    public void addToCarrito(@PathVariable Long carritoId, @PathVariable Long productId, @RequestParam int quantity) {
-        catalogoService.addToCarrito(carritoId, productId, quantity);
+    
+    @GetMapping("/products/filter")
+    public ResponseEntity<List<Product>> filterProductsByCategory(@RequestParam String description) {
+        List<Product> filteredProducts = catalogoService.filterByCategory(description);
+        return new ResponseEntity<>(filteredProducts, HttpStatus.OK);
     }
 }
