@@ -10,8 +10,6 @@ public interface ProductService {
     void deleteProduct(Long id);
     Product getProductById(Long id);
     List<Product> getAllProducts();
-
-    // Métodos adicionales
     Double calculateFinalPrice(Long id);
     void applyDiscount(Long id, Double discount);
 }

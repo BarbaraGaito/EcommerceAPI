@@ -1,17 +1,13 @@
 package com.uade.tpo.demo.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.OneToOne;
+import java.util.List;
+
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +23,13 @@ public class Product {
     private Double price;
 
     @Column(nullable = true)
-    private Double discount;  // Descuento opcional para el producto
+    private Double discount;  
 
     @Column(nullable = false)
     private Integer stock;
 
-    @Lob
-    @Column
-    private byte[] photos;  // Almacenando fotos como BLOB
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> images;  
 
     @OneToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")

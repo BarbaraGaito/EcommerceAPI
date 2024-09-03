@@ -17,18 +17,12 @@ import com.uade.tpo.demo.Entity.Product;
 import com.uade.tpo.demo.service.CatalogoService;
 
 @RestController
-@RequestMapping("/api/catalog")
+@RequestMapping("/catalog")
 public class CatalogoController {
 
     @Autowired
     private CatalogoService catalogoService;
 
-    /**
-     * Crea un nuevo catálogo.
-     *
-     * @param catalogo El objeto Catalogo a ser creado.
-     * @return El catálogo creado.
-     */
     @PostMapping
     public ResponseEntity<Catalogo> createCatalogo(@RequestBody Catalogo catalogo) {
         Catalogo createdCatalogo = catalogoService.createCatalogo(catalogo);

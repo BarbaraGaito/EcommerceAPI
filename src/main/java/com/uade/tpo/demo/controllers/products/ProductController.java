@@ -19,7 +19,7 @@ import com.uade.tpo.demo.Entity.Product;
 import com.uade.tpo.demo.service.ProductService;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 public class ProductController {
 
     @Autowired
@@ -55,16 +55,12 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    // Nuevos endpoints
-
-    // Endpoint para obtener el precio final con descuento aplicado
     @GetMapping("/{id}/final-price")
     public ResponseEntity<Double> calculateFinalPrice(@PathVariable Long id) {
         Double finalPrice = productService.calculateFinalPrice(id);
         return new ResponseEntity<>(finalPrice, HttpStatus.OK);
     }
 
-    // Endpoint para aplicar un descuento a un producto
     @PutMapping("/{id}/discount")
     public ResponseEntity<Void> applyDiscount(@PathVariable Long id, @RequestParam Double discount) {
         productService.applyDiscount(id, discount);

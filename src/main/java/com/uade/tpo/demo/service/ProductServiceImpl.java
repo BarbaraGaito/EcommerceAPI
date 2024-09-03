@@ -22,18 +22,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Long id, Product product) {
-        Optional<Product> existingProduct = productRepository.findById(id);
-        if (existingProduct.isPresent()) {
-            Product updatedProduct = existingProduct.get();
-            updatedProduct.setName(product.getName());
-            updatedProduct.setDescription(product.getDescription());
-            updatedProduct.setPrice(product.getPrice());
-            updatedProduct.setStock(product.getStock());
-            updatedProduct.setPhotos(product.getPhotos());
-            updatedProduct.setCategory(product.getCategory());
-            return productRepository.save(updatedProduct);
+        Optional<Product> databaseProduct = productRepository.findById(id);
+        if (databaseProduct.isPresent()) {
+            Product existingProduct = databaseProduct.get();
+            
+            existingProduct.setName(product.getName());
+            existingProduct.setDescription(product.getDescription());
+            existingProduct.setPrice(product.getPrice());
+            existingProduct.setStock(product.getStock());
+            existingProduct.setCategory(product.getCategory());
+            
+            if (product.getImages() != null && !product.getImages().isEmpty()) {
+                existingProduct.setImages(product.getImages());
+            }
+
+            return productRepository.save(existingProduct);
         } else {
-            throw new RuntimeException("Product not found with id " + id);
+            throw new RuntimeException("Producto no encontrado para el id:" + id);
         }
     }
 
@@ -45,15 +50,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Product not found with id " + id));
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado para el id: " + id));
     }
 
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
-
-    // Implementación de los nuevos métodos
 
     @Override
     public Double calculateFinalPrice(Long id) {

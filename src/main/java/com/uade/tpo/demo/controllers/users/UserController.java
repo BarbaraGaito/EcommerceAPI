@@ -11,7 +11,7 @@ import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.service.UserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired

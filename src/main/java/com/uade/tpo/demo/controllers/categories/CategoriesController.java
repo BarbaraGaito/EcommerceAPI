@@ -23,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class CategoriesController {
     private CategoryService categoryService;
 
-    public CategoriesController() {
-        categoryService = new CategoryService();
-    }
-
     @GetMapping
     public ResponseEntity<List<Category>> getCategories() {
         return ResponseEntity.ok(categoryService.getCategories());
