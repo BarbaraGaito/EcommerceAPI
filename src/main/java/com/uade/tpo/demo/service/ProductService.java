@@ -11,5 +11,4 @@ public interface ProductService {
     Product getProductById(Long id);
     List<Product> getAllProducts();
     Double calculateFinalPrice(Long id);
-    void applyDiscount(Long id, Double discount);
 }

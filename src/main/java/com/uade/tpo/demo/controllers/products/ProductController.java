@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.demo.Entity.Product;
@@ -61,9 +60,4 @@ public class ProductController {
         return new ResponseEntity<>(finalPrice, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/discount")
-    public ResponseEntity<Void> applyDiscount(@PathVariable Long id, @RequestParam Double discount) {
-        productService.applyDiscount(id, discount);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
