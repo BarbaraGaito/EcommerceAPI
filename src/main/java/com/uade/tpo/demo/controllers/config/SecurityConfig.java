@@ -36,15 +36,15 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                                                 .requestMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority(Role.ADMIN.name())                                                   
                                                 //CARRITO
-                                                .requestMatchers("/api/cart/**").hasAnyAuthority(Role.USER.name())                       
+                                                .requestMatchers("/cart/**").hasAnyAuthority(Role.USER.name())                       
                                                 //CATALOGO
-                                                .requestMatchers(HttpMethod.GET,"/api/catalog/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST,"/api/catalog/**").hasAnyAuthority(Role.ADMIN.name())                       
+                                                .requestMatchers(HttpMethod.GET,"/catalog/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST,"/catalog/**").hasAnyAuthority(Role.ADMIN.name())                       
                                                 //PRODUCTOS
-                                                .requestMatchers(HttpMethod.GET,"/api/products/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST,"/api/products/**").hasAnyAuthority(Role.ADMIN.name())                       
+                                                .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST,"/products/**").hasAnyAuthority(Role.ADMIN.name())                       
                                                 //USUARIOS (a chequear)
-                                                .requestMatchers("/api/users/**").hasAnyAuthority(Role.ADMIN.name())
+                                                .requestMatchers("/users/**").permitAll()
                                                 .anyRequest()
                                                 .authenticated())
                                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
