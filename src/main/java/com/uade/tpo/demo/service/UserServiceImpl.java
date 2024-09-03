@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(userRequest.getPassword());  
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastname());
-        Role userRole = Role.valueOf(userRequest.getUsertype().toUpperCase());
+        Role userRole = userRequest.getRole();
         user.setRole(userRole);
         return userRepository.save(user);
     }
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
             updatedUser.setPassword(userRequest.getPassword());
             updatedUser.setFirstName(userRequest.getFirstName());
             updatedUser.setLastName(userRequest.getLastname());
-            Role userRole = Role.valueOf(userRequest.getUsertype().toUpperCase());
+            Role userRole = userRequest.getRole();
             updatedUser.setRole(userRole);
             return userRepository.save(updatedUser);
         } else {
