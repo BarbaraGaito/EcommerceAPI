@@ -33,7 +33,6 @@ build/
 .vscode/
 
 # Excluir archivos de configuración sensibles
-/application-secrets.properties
+src/main/resources/application-secrets.properties
+src/main/resources/application.properties
 
-# Incluir el archivo de ejemplo
-!/application-secrets.properties.example
