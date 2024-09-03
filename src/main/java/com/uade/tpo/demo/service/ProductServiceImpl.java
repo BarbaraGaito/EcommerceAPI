@@ -31,7 +31,8 @@ public class ProductServiceImpl implements ProductService {
             existingProduct.setPrice(product.getPrice());
             existingProduct.setStock(product.getStock());
             existingProduct.setCategory(product.getCategory());
-            
+            existingProduct.setDiscount(product.getDiscount());
+
             if (product.getImages() != null && !product.getImages().isEmpty()) {
                 existingProduct.setImages(product.getImages());
             }
@@ -67,13 +68,4 @@ public class ProductServiceImpl implements ProductService {
         return product.getPrice();
     }
 
-    @Override
-    public void applyDiscount(Long id, Double discount) {
-        if (discount < 0 || discount > 100) {
-            throw new IllegalArgumentException("El descuento debe estar entre 0 y 100.");
-        }
-        Product product = getProductById(id);
-        product.setDiscount(discount);
-        productRepository.save(product);
-    }
 }
