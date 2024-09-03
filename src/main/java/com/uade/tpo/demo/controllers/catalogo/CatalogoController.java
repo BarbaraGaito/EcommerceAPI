@@ -16,7 +16,7 @@ import com.uade.tpo.demo.Entity.Product;
 import com.uade.tpo.demo.service.CatalogoService;
 
 @RestController
-@RequestMapping("/catalog")
+@RequestMapping("/catalogo")
 public class CatalogoController {
 
     @Autowired
