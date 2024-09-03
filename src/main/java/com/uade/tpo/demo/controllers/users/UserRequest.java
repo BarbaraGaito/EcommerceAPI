@@ -10,8 +10,6 @@ public class UserRequest {
     private String email;
     private String password;
     private String name;
-    private String firstName;
-    private String lastname;
     private Role role;
 
 }
