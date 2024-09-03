@@ -34,3 +34,6 @@ build/
 
 # Excluir archivos de configuración sensibles
 /application-secrets.properties
+
+# Incluir el archivo de ejemplo
+!/application-secrets.properties.example
