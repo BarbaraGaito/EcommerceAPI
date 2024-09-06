@@ -4,8 +4,11 @@ package com.uade.tpo.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+
+
 import com.uade.tpo.demo.Entity.Category;
 import com.uade.tpo.demo.exceptions.CategoryDuplicateException;
+
 
 public interface CategoryService {
     public List<Category> getCategories();

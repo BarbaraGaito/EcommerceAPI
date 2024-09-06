@@ -34,17 +34,17 @@ public class SecurityConfig {
                                                 .requestMatchers("/error/**").permitAll()
                                                 //CATEGORIAS
                                                 .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority(Role.ADMIN.name())                                                   
+                                                .requestMatchers(HttpMethod.POST, "/categories/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                                                   
                                                 //CARRITO
-                                                .requestMatchers("/api/cart/**").hasAnyAuthority(Role.USER.name())                       
+                                                .requestMatchers("/cart/**").hasAnyAuthority(Role.USER.name())                       
                                                 //CATALOGO
-                                                .requestMatchers(HttpMethod.GET,"/api/catalog/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST,"/api/catalog/**").hasAnyAuthority(Role.ADMIN.name())                       
+                                                .requestMatchers(HttpMethod.GET,"/catalogo/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST,"/catalogo/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                       
                                                 //PRODUCTOS
-                                                .requestMatchers(HttpMethod.GET,"/api/products/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST,"/api/products/**").hasAnyAuthority(Role.ADMIN.name())                       
+                                                .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                       
                                                 //USUARIOS (a chequear)
-                                                .requestMatchers("/api/users/**").hasAnyAuthority(Role.ADMIN.name())
+                                                .requestMatchers("/users/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())
                                                 .anyRequest()
                                                 .authenticated())
                                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
