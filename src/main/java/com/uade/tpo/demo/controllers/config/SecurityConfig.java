@@ -36,7 +36,10 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                                                 .requestMatchers(HttpMethod.POST, "/categories/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                                                   
                                                 //CARRITO
-                                                .requestMatchers("/cart/**").hasAnyAuthority(Role.USER.name())                       
+                                                .requestMatchers(HttpMethod.GET,"/cart/**").permitAll()//hasAnyAuthority(Role.USER.name())   
+                                                .requestMatchers(HttpMethod.POST,"/cart/**").permitAll()   
+                                                .requestMatchers(HttpMethod.PUT,"/cart/**").permitAll()     
+                                                .requestMatchers(HttpMethod.DELETE,"/cart/**").permitAll()                     
                                                 //CATALOGO
                                                 .requestMatchers(HttpMethod.GET,"/catalogo/**").permitAll()
                                                 .requestMatchers(HttpMethod.POST,"/catalogo/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                       
