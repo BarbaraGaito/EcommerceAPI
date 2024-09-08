@@ -9,6 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.demo.Entity.Product;
+import com.uade.tpo.demo.Entity.dto.ProductDTO;
+import com.uade.tpo.demo.repository.CategoryRepository;
+import com.uade.tpo.demo.repository.ProductRepository;
+
 
 @Service
 public class CatalogoServiceImpl implements CatalogoService {
@@ -19,19 +23,43 @@ public class CatalogoServiceImpl implements CatalogoService {
     @Autowired
     private ProductService productService; 
 
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
-    public List<Product> filterByCategory(String description) {
-        return productService.getAllProducts().stream()
-                .filter(product -> product.getCategory() != null && 
-                                   product.getCategory().getDescription().equalsIgnoreCase(description))
+    public List<ProductDTO> filterByCategory(Long categoryId) {
+        return productRepository.findAll().stream()
+            .filter(product -> product.getCategory() != null && product.getCategory().getId().equals(categoryId))
+            .map(product -> new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStock(),
+                product.getCategory() != null ? product.getCategory().getDescription() : null))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> getAllProductsFromCatalog() {
+        // Obtener todos los productos desde el repositorio de productos
+        List<Product> products = productRepository.findAll();
+
+        // Convertir a DTO para evitar referencias circulares y devolver los productos simplificados
+        return products.stream()
+                .map(product -> new ProductDTO(
+                    product.getId(),
+                    product.getName(),
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.getStock(),
+                    product.getCategory() != null ? product.getCategory().getDescription() : null))
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public List<Product> getAllProductsFromCatalog() {
-        return productService.getAllProducts();
-    }
-
+    
     @Override
     public ResponseEntity<String> addToCart(Long carritoId, Long productId, int quantity) {
         try {
