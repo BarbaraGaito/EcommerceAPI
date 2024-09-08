@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
-import com.uade.tpo.demo.Entity.Product;
+import com.uade.tpo.demo.Entity.dto.ProductDTO;
 
 public interface CatalogoService {
-    List<Product> filterByCategory(String description);
+    List<ProductDTO> filterByCategory(Long categoryId);
     ResponseEntity<String> addToCart(Long carritoId, Long productId, int quantity); 
-    List<Product> getAllProductsFromCatalog();
+    List<ProductDTO> getAllProductsFromCatalog();
 }
