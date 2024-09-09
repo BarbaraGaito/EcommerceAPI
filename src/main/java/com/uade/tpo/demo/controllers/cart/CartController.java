@@ -72,5 +72,13 @@ public class CartController {
         Cart updatedCart = cartService.updateProductQuantityInCart(cartId, productId, quantity);
         return new ResponseEntity<>(updatedCart, HttpStatus.OK);
     }
+    @PutMapping("/{cartId}/finish")
+    public ResponseEntity<Double> finishCart(@PathVariable Long cartId) {
+        // Llamar al servicio para finalizar el carrito y obtener el precio total
+        Double totalPrice = cartService.finishCart(cartId);
+       
+        // Retornar el precio total en la respuesta
+        return new ResponseEntity<>(totalPrice, HttpStatus.OK);
+    }
 }
 

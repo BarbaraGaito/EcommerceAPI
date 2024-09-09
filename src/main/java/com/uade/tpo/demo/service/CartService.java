@@ -13,4 +13,5 @@ public interface CartService {
     Cart addProductToCart(Long cartId, Long productId, int quantity);
     Cart removeProductFromCart(Long cartId, Long productId);
     Cart updateProductQuantityInCart(Long cartId, Long productId, int quantity);
+    Double finishCart(Long cartId);
 }
