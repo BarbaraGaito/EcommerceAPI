@@ -54,10 +54,7 @@ public class ProductServiceImpl implements ProductService {
             .orElseThrow(() -> new RuntimeException("Producto no encontrado para el id: " + id));
     }
 
-    @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
+
 
     @Override
     public Double calculateFinalPrice(Long id) {

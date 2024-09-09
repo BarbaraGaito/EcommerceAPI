@@ -48,11 +48,7 @@ public class ProductController {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
+ 
 
     @GetMapping("/{id}/final-price")
     public ResponseEntity<Double> calculateFinalPrice(@PathVariable Long id) {

@@ -9,6 +9,5 @@ public interface ProductService {
     Product updateProduct(Long id, Product product);
     void deleteProduct(Long id);
     Product getProductById(Long id);
-    List<Product> getAllProducts();
     Double calculateFinalPrice(Long id);
 }
