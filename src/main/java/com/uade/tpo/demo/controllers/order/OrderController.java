@@ -1,5 +1,6 @@
 package com.uade.tpo.demo.controllers.order;
 
+import com.uade.tpo.demo.Entity.CartItem;
 import com.uade.tpo.demo.Entity.Order;
 import com.uade.tpo.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
+    public ResponseEntity<Order> createOrder(@RequestParam Long userId, @RequestBody List<CartItem> cartItems) {
+        Order createdOrder = orderService.createOrder(userId, cartItems);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
