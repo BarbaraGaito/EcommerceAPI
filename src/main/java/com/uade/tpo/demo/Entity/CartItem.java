@@ -21,5 +21,9 @@ public class CartItem {
     private Product product;
  
     @Column(nullable = false)
+<<<<<<< HEAD
     private Integer quantity = 0;
+=======
+    private Integer quantity=0;
+>>>>>>> main
 }

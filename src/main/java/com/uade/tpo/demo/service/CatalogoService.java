@@ -2,12 +2,11 @@ package com.uade.tpo.demo.service;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-
-import com.uade.tpo.demo.Entity.Product;
+import com.uade.tpo.demo.Entity.dto.ProductDTO;
 
 public interface CatalogoService {
-    List<Product> filterByCategory(String description);
-    ResponseEntity<String> addToCart(Long carritoId, Long productId, int quantity); 
-    List<Product> getAllProductsFromCatalog();
+    List<ProductDTO> getAllProductsFromCatalog();
+    List<ProductDTO> filterByCategory(Long categoryId);
+    List<ProductDTO> filterByPrice(Double minPrice, Double maxPrice);
+    void addProductToCart(Long cartId, Long productId, int quantity);
 }

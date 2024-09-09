@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+<<<<<<< HEAD
  
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,18 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+=======
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Entity
+@Builder
+@NoArgsConstructor 
+@AllArgsConstructor 
+>>>>>>> main
 @Table(name = "carts")
 public class Cart {
     @Id

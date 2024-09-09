@@ -110,10 +110,54 @@ public class CartServiceImpl implements CartService {
         item.setQuantity(quantity);
         return cartRepository.save(cart);
     }
+<<<<<<< HEAD
 
    
 
 
+=======
+    @Override
+    public Double finishCart (Long cartId) {
+        // Obtener el carrito por su ID
+        Cart cart = getCartById(cartId);
+        double total = 0;
+ 
+    // Recorrer los items del carrito
+        for (CartItem item : cart.getItems()) {
+            Product product = item.getProduct();
+            int quantity = item.getQuantity();
+ 
+            // Verificar si hay suficiente stock para cada producto
+            if (product.getStock() < quantity) {
+                throw new RuntimeException("Not enough stock for product with id " + product.getId());
+            }
+ 
+         // Calcular el precio del producto con descuento (si existe)
+            double productPrice = product.getPrice();
+            if (product.getDiscount() != null && product.getDiscount() > 0) {
+                productPrice = productPrice - (productPrice * product.getDiscount() / 100);
+            }
+ 
+            // Sumar el costo total de este item al total del carrito
+            total += productPrice * quantity;
+ 
+            // Actualizar el stock del producto
+            if (product.getStock() - quantity >= 0) {
+               product.setStock(product.getStock() - quantity);
+              productRepository.save(product);
+         } else {
+               throw new RuntimeException("Not enough stock for product with id " + product.getId());
+            }
+    }
+ 
+        // Vaciar el carrito después de finalizar la compra
+        cart.getItems().clear();
+        cartRepository.save(cart);
+ 
+        // Retornar el precio total del carrito
+         return total;
+}
+>>>>>>> main
 
 }
 

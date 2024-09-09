@@ -7,14 +7,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.context.SecurityContextHolder;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-
-import com.uade.tpo.demo.Entity.Role;
-
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,17 +30,27 @@ public class SecurityConfig {
                                                 //CATEGORIAS
                                                 .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                                                 .requestMatchers(HttpMethod.POST, "/categories/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                                                   
+                                                //ORDER
+                                                .requestMatchers(HttpMethod.GET, "/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
+                                                .requestMatchers(HttpMethod.POST,"/oreder/**").permitAll()//hasAnyAuthority(Role.USER.name())
+                                                .requestMatchers(HttpMethod.DELETE, "/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
                                                 //CARRITO
+<<<<<<< HEAD
                                                 .requestMatchers(HttpMethod.GET,"/cart/**").permitAll()//hasAnyAuthority(Role.USER.name())   
                                                 .requestMatchers(HttpMethod.POST,"/cart/**").permitAll()   
                                                 .requestMatchers(HttpMethod.PUT,"/cart/**").permitAll()     
                                                 .requestMatchers(HttpMethod.DELETE,"/cart/**").permitAll()                     
+=======
+                                                .requestMatchers("/cart/**").permitAll()//hasAnyAuthority(Role.USER.name())                       
+>>>>>>> main
                                                 //CATALOGO
                                                 .requestMatchers(HttpMethod.GET,"/catalogo/**").permitAll()
+                                                .requestMatchers(HttpMethod.PUT,"/catalogo/**").permitAll()
                                                 .requestMatchers(HttpMethod.POST,"/catalogo/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                       
                                                 //PRODUCTOS
                                                 .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                       
+                                                .requestMatchers(HttpMethod.POST,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())  
+                                                .requestMatchers(HttpMethod.DELETE,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                     
                                                 //USUARIOS (a chequear)
                                                 .requestMatchers("/users/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())
                                                 .anyRequest()
