@@ -35,14 +35,19 @@ public class SecurityConfig {
                                                 //CATEGORIAS
                                                 .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                                                 .requestMatchers(HttpMethod.POST, "/categories/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                                                   
+                                                //ORDER
+                                                .requestMatchers(HttpMethod.GET, "/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
+                                                .requestMatchers(HttpMethod.POST,"/oreder/**").permitAll()//hasAnyAuthority(Role.USER.name())
+                                                .requestMatchers(HttpMethod.DELETE, "/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
                                                 //CARRITO
-                                                .requestMatchers("/cart/**").hasAnyAuthority(Role.USER.name())                       
+                                                .requestMatchers("/cart/**").permitAll()//hasAnyAuthority(Role.USER.name())                       
                                                 //CATALOGO
                                                 .requestMatchers(HttpMethod.GET,"/catalogo/**").permitAll()
                                                 .requestMatchers(HttpMethod.POST,"/catalogo/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                       
                                                 //PRODUCTOS
                                                 .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                       
+                                                .requestMatchers(HttpMethod.POST,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())  
+                                                .requestMatchers(HttpMethod.DELETE,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                     
                                                 //USUARIOS (a chequear)
                                                 .requestMatchers("/users/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())
                                                 .anyRequest()
