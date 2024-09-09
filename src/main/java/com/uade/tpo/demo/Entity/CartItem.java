@@ -16,5 +16,5 @@ public class CartItem {
     private Product product;
 
     @Column(nullable = false)
-    private Integer quantity;
+    private Integer quantity=0;
 }
