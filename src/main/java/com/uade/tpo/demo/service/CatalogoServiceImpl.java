@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.demo.Entity.Cart;
+import com.uade.tpo.demo.Entity.CartItem;
 import com.uade.tpo.demo.Entity.Product;
 import com.uade.tpo.demo.Entity.dto.ProductDTO;
-import com.uade.tpo.demo.repository.CategoryRepository;
+import com.uade.tpo.demo.repository.CartRepository;
 import com.uade.tpo.demo.repository.ProductRepository;
 
 
@@ -21,13 +21,13 @@ public class CatalogoServiceImpl implements CatalogoService {
     private CartService cartService;  
 
     @Autowired
-    private ProductService productService; 
+    private ProductService productService;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
 
     @Override
     public List<ProductDTO> filterByCategory(Long categoryId) {
@@ -45,10 +45,8 @@ public class CatalogoServiceImpl implements CatalogoService {
 
     @Override
     public List<ProductDTO> getAllProductsFromCatalog() {
-        // Obtener todos los productos desde el repositorio de productos
         List<Product> products = productRepository.findAll();
 
-        // Convertir a DTO para evitar referencias circulares y devolver los productos simplificados
         return products.stream()
                 .map(product -> new ProductDTO(
                     product.getId(),
@@ -61,20 +59,37 @@ public class CatalogoServiceImpl implements CatalogoService {
     }
     
     @Override
-    public ResponseEntity<String> addToCart(Long carritoId, Long productId, int quantity) {
+    public void addProductToCart(Long cartId, Long productId, int quantity) {
         try {
-            
-            Product product = productService.getProductById(productId);
+            Cart cart = cartService.getCartById(cartId);  // Obtener el carrito directamente aquí
+            Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
 
             if (product.getStock() < quantity) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Stock insuficiente para este producto");
+                throw new RuntimeException("Not enough stock for product with id " + productId);
             }
-            
-            cartService.addProductToCart(carritoId, productId, quantity);
-            return ResponseEntity.ok("Producto agregado al carrito exitosamente");
 
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            CartItem item = cart.getItems().stream()
+                .filter(i -> i.getProduct() != null && i.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElse(null);
+
+            if (item == null) {
+                item = new CartItem();
+                item.setProduct(product);
+                item.setQuantity(quantity);
+                cart.getItems().add(item);
+            } else {
+                item.setQuantity(item.getQuantity() + quantity);
+            }
+
+            product.setStock(product.getStock() - quantity);
+            productRepository.save(product);
+
+            cartRepository.save(cart);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while adding product to cart.", e);
         }
     }
+
 }
