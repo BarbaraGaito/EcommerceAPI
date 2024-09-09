@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.demo.Entity.Category;
+import com.uade.tpo.demo.Entity.dto.CategoryDTO;
 import com.uade.tpo.demo.Entity.dto.CategoryRequest;
 import com.uade.tpo.demo.exceptions.CategoryDuplicateException;
 import com.uade.tpo.demo.service.CategoryService;
@@ -11,6 +12,7 @@ import com.uade.tpo.demo.service.CategoryService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +29,14 @@ public class CategoriesController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<Category>> getCategories() {
-        return ResponseEntity.ok(categoryService.getCategories());
-    }
+public ResponseEntity<List<CategoryDTO>> getCategories() {
+    List<Category> categories = categoryService.getCategories();
+    List<CategoryDTO> categoryDTOs = categories.stream()
+                                               .map(c -> new CategoryDTO(c.getId(), c.getDescription()))
+                                               .collect(Collectors.toList());
+    return ResponseEntity.ok(categoryDTOs);
+}
+
 
     @GetMapping("/{categoryId}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long categoryId) {
