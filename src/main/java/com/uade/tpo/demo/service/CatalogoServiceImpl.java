@@ -30,6 +30,22 @@ public class CatalogoServiceImpl implements CatalogoService {
     private ProductRepository productRepository;
 
     @Override
+    public List<ProductDTO> getAllProductsFromCatalog() {
+        List<Product> products = productRepository.findAll();
+
+        return products.stream()
+                .map(product -> new ProductDTO(
+                    product.getId(),
+                    product.getName(),
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.getStock(),
+                    product.getCategory() != null ? product.getCategory().getDescription() : null))
+                .collect(Collectors.toList());
+    }
+    
+
+    @Override
     public List<ProductDTO> filterByCategory(Long categoryId) {
         return productRepository.findAll().stream()
             .filter(product -> product.getCategory() != null && product.getCategory().getId().equals(categoryId))
@@ -44,19 +60,19 @@ public class CatalogoServiceImpl implements CatalogoService {
     }
 
     @Override
-    public List<ProductDTO> getAllProductsFromCatalog() {
-        List<Product> products = productRepository.findAll();
-
-        return products.stream()
-                .map(product -> new ProductDTO(
-                    product.getId(),
-                    product.getName(),
-                    product.getDescription(),
-                    product.getPrice(),
-                    product.getStock(),
-                    product.getCategory() != null ? product.getCategory().getDescription() : null))
-                .collect(Collectors.toList());
+    public List<ProductDTO> filterByPrice(Double minPrice, Double maxPrice) {
+        return productRepository.findAll().stream()
+            .filter(product -> product.getPrice() >= minPrice && product.getPrice() <= maxPrice)
+            .map(product -> new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStock(),
+                product.getCategory() != null ? product.getCategory().getDescription() : null))
+            .collect(Collectors.toList());
     }
+
     
     @Override
     public void addProductToCart(Long cartId, Long productId, int quantity) {

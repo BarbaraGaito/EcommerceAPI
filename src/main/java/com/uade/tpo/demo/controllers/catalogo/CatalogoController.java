@@ -28,6 +28,20 @@ public class CatalogoController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @GetMapping("/products/by-category/{categoryId}")
+    public ResponseEntity<List<ProductDTO>> filterByCategory(@PathVariable Long categoryId) {
+        List<ProductDTO> products = catalogoService.filterByCategory(categoryId);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/filter-by-price")
+    public List<ProductDTO> filterByPrice(
+        @RequestParam Double minPrice, 
+        @RequestParam Double maxPrice) {
+        return catalogoService.filterByPrice(minPrice, maxPrice);
+    }
+
+    
     @PutMapping("/{cartId}/add-product")
     public ResponseEntity<String> addProductToCart(@PathVariable Long cartId,
                                                    @RequestParam Long productId,
@@ -40,12 +54,5 @@ public class CatalogoController {
         } catch (Exception e) {
             return new ResponseEntity<>("An error occurred while adding product to cart.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-
-    @GetMapping("/products/by-category/{categoryId}")
-    public ResponseEntity<List<ProductDTO>> filterByCategory(@PathVariable Long categoryId) {
-        List<ProductDTO> products = catalogoService.filterByCategory(categoryId);
-        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }
