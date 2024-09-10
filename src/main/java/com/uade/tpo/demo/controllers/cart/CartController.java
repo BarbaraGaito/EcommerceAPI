@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.demo.Entity.Cart;
+import com.uade.tpo.demo.Entity.dto.CartDTO;
 import com.uade.tpo.demo.service.CartService;
 
 @RestController
@@ -33,8 +34,8 @@ public class CartController {
  
     @PutMapping("/{id}")
     public ResponseEntity<Cart> updateCart(@PathVariable Long id, @RequestBody Cart cart) {
-        Cart updatedCart = cartService.updateCart(id, cart);
-        return new ResponseEntity<>(updatedCart, HttpStatus.OK);
+         cartService.updateCart(id, cart);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
  
     @DeleteMapping("/{id}")
@@ -44,14 +45,14 @@ public class CartController {
     }
  
     @GetMapping("/{id}")
-    public ResponseEntity<Cart> getCartById(@PathVariable Long id) {
-        Cart cart = cartService.getCartById(id);
+    public ResponseEntity<CartDTO> getCartByIdDTO(@PathVariable Long id) {
+        CartDTO cart = cartService.getCartByIdDTO(id);
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
  
     @GetMapping
-    public ResponseEntity<List<Cart>> getAllCarts() {
-        List<Cart> carts = cartService.getAllCarts();
+    public ResponseEntity<List<CartDTO>> getAllCarts() {
+        List<CartDTO> carts = cartService.getAllCarts();
         return new ResponseEntity<>(carts, HttpStatus.OK);
     }
     
@@ -60,16 +61,16 @@ public class CartController {
             @PathVariable Long cartId,
             @PathVariable Long productId,
             @PathVariable int quantity) {
-        Cart updatedCart = cartService.addProductToCart(cartId, productId, quantity);
-        return new ResponseEntity<>(updatedCart, HttpStatus.OK);
+         cartService.addProductToCart(cartId, productId, quantity);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
    
     @PutMapping("/{cartId}/remove-product/{productId}")
     public ResponseEntity<Cart> removeProductFromCart(
             @PathVariable Long cartId,
             @PathVariable Long productId) {
-        Cart updatedCart = cartService.removeProductFromCart(cartId, productId);
-        return new ResponseEntity<>(updatedCart, HttpStatus.OK);
+        cartService.removeProductFromCart(cartId, productId);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
    
     @PutMapping("/{cartId}/update-product-quantity/{productId}/{quantity}")
@@ -77,8 +78,8 @@ public class CartController {
             @PathVariable Long cartId,
             @PathVariable Long productId,
             @PathVariable int quantity) {
-        Cart updatedCart = cartService.updateProductQuantityInCart(cartId, productId, quantity);
-        return new ResponseEntity<>(updatedCart, HttpStatus.OK);
+        cartService.updateProductQuantityInCart(cartId, productId, quantity);
+         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PutMapping("/{cartId}/finish")
     public ResponseEntity<Double> finishCart(@PathVariable Long cartId) {

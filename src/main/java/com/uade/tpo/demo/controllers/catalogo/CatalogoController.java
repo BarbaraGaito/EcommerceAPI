@@ -53,7 +53,6 @@ public class CatalogoController {
     public ResponseEntity<Cart> addProductToCart(
             @PathVariable Long cartId,
             @RequestBody AddProductToCartRequest request) {
-
         catalogoService.addProductToCart(cartId, request.getProductId(), request.getQuantity());
         return new ResponseEntity<>( HttpStatus.OK);
     }
