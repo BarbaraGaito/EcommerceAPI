@@ -2,11 +2,16 @@ package com.uade.tpo.demo.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.Product;
+import com.uade.tpo.demo.Entity.dto.CartDTO;
+import com.uade.tpo.demo.Entity.dto.CartItemDTO;
+import com.uade.tpo.demo.Entity.dto.ProductDTO;
 import com.uade.tpo.demo.repository.ProductRepository;
 
 @Service
@@ -16,12 +21,12 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    public void createProduct(Product product) {
+        productRepository.save(product);
     }
 
     @Override
-    public Product updateProduct(Long id, Product product) {
+    public void updateProduct(Long id, Product product) {
         Optional<Product> databaseProduct = productRepository.findById(id);
         if (databaseProduct.isPresent()) {
             Product existingProduct = databaseProduct.get();
@@ -37,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
                 existingProduct.setImages(product.getImages());
             }
 
-            return productRepository.save(existingProduct);
+            productRepository.save(existingProduct);
         } else {
             throw new RuntimeException("Producto no encontrado para el id:" + id);
         }
@@ -53,6 +58,22 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Producto no encontrado para el id: " + id));
     }
+
+    @Override
+    public ProductDTO getProductByIdDTO(Long id) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Product not found with id " + id));
+    
+        return new ProductDTO(
+            product.getId(),
+            product.getName(),
+            product.getDescription(),
+            product.getPrice(),
+            product.getStock(),
+            product.getDiscount(),
+            product.getCategory() != null ? product.getCategory().getDescription() : null);
+    }
+    
 
 
 
