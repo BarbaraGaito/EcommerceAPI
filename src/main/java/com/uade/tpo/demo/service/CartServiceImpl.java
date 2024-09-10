@@ -1,5 +1,6 @@
 package com.uade.tpo.demo.service;
  
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,17 +10,28 @@ import org.springframework.stereotype.Service;
  
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.CartItem;
+import com.uade.tpo.demo.Entity.Order;
+import com.uade.tpo.demo.Entity.OrderItem;
 import com.uade.tpo.demo.Entity.Product;
+import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.Entity.dto.CartDTO;
 import com.uade.tpo.demo.Entity.dto.CartItemDTO;
 import com.uade.tpo.demo.repository.CartRepository;
+import com.uade.tpo.demo.repository.OrderRepository;
 import com.uade.tpo.demo.repository.ProductRepository;
  
 @Service
 public class CartServiceImpl implements CartService {
- 
+
+    @Autowired
+    private OrderRepository orderRepository;
+
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private UserService userService;
+
 
  
     @Autowired
@@ -140,50 +152,88 @@ public class CartServiceImpl implements CartService {
         }
         item.setQuantity(quantity);
          cartRepository.save(cart);
+        }
+//     @Override
+//     public Double finishCart (Long cartId) {
+//         // Obtener el carrito por su ID
+//         Cart cart = getCartById(cartId);
+//         double total = 0;
+ 
+//     // Recorrer los items del carrito
+//         for (CartItem item : cart.getItems()) {
+//             Product product = item.getProduct();
+//             int quantity = item.getQuantity();
+ 
+//             // Verificar si hay suficiente stock para cada producto
+//             if (product.getStock() < quantity) {
+//                 throw new RuntimeException("Not enough stock for product with id " + product.getId());
+//             }
+ 
+//          // Calcular el precio del producto con descuento (si existe)
+//             double productPrice = product.getPrice();
+//             if (product.getDiscount() != null && product.getDiscount() > 0) {
+//                 productPrice = productPrice - (productPrice * product.getDiscount() / 100);
+//             }
+ 
+//             // Sumar el costo total de este item al total del carrito
+//             total += productPrice * quantity;
+ 
+//             // Actualizar el stock del producto
+//             if (product.getStock() - quantity >= 0) {
+//                product.setStock(product.getStock() - quantity);
+//               productRepository.save(product);
+//          } else {
+//                throw new RuntimeException("Not enough stock for product with id " + product.getId());
+//             }
+//     }
+ 
+//         // Vaciar el carrito después de finalizar la compra
+//         cart.getItems().clear();
+//         cartRepository.save(cart);
+ 
+//         // Retornar el precio total del carrito
+//          return total;
+// }
+@Override
+public Double finishCart(Long cartId) {
+    Cart cart = getCartById(cartId);
+    double total = 0;
+
+    // Obtener el usuario del carrito
+    User user = userService.getUserById(cart.getUserId());
+
+    // Crear una nueva orden
+    Order order = new Order();
+    order.setUser(user); // Establecer el usuario
+    order.setTotalPrice(total);
+
+    for (CartItem item : cart.getItems()) {
+        Product product = item.getProduct();
+        int quantity = item.getQuantity();
+
+        if (product.getStock() < quantity) {
+            throw new RuntimeException("Not enough stock for product with id " + product.getId());
+        }
+
+        double productPrice = product.getPrice();
+        if (product.getDiscount() != null && product.getDiscount() > 0) {
+            productPrice = productPrice - (productPrice * product.getDiscount() / 100);
+        }
+
+        total += productPrice * quantity;
+        product.setStock(product.getStock() - quantity);
+        productRepository.save(product);
     }
- 
-    @Override
-    public Double finishCart (Long cartId) {
-        // Obtener el carrito por su ID
-        Cart cart = getCartById(cartId);
-        double total = 0;
- 
-    // Recorrer los items del carrito
-        for (CartItem item : cart.getItems()) {
-            Product product = item.getProduct();
-            int quantity = item.getQuantity();
- 
-            // Verificar si hay suficiente stock para cada producto
-            if (product.getStock() < quantity) {
-                throw new RuntimeException("Not enough stock for product with id " + product.getId());
-            }
- 
-         // Calcular el precio del producto con descuento (si existe)
-            double productPrice = product.getPrice();
-            if (product.getDiscount() != null && product.getDiscount() > 0) {
-                productPrice = productPrice - (productPrice * product.getDiscount() / 100);
-            }
- 
-            // Sumar el costo total de este item al total del carrito
-            total += productPrice * quantity;
- 
-            // Actualizar el stock del producto
-            if (product.getStock() - quantity >= 0) {
-               product.setStock(product.getStock() - quantity);
-              productRepository.save(product);
-         } else {
-               throw new RuntimeException("Not enough stock for product with id " + product.getId());
-            }
-    }
- 
-        // Vaciar el carrito después de finalizar la compra
-        cart.getItems().clear();
-        cartRepository.save(cart);
- 
-        // Retornar el precio total del carrito
-         return total;
+
+    order.setTotalPrice(total);
+    orderRepository.save(order);
+
+    cart.getItems().clear();
+    cartRepository.save(cart);
+
+    return total;
 }
- 
+
  
  
 }
