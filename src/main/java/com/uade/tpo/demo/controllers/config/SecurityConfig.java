@@ -43,8 +43,9 @@ public class SecurityConfig {
                                                 //PRODUCTOS
                                                 .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
                                                 .requestMatchers(HttpMethod.POST,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())  
-                                                .requestMatchers(HttpMethod.DELETE,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                     
-                                                //USUARIOS (a chequear)
+                                                .requestMatchers(HttpMethod.DELETE,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())
+                                                .requestMatchers(HttpMethod.PUT,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                     
+                                                //USUARIOS
                                                 .requestMatchers("/users/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())
                                                 .anyRequest()
                                                 .authenticated())
