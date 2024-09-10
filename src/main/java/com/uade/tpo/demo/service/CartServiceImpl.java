@@ -2,13 +2,16 @@ package com.uade.tpo.demo.service;
  
 import java.util.List;
 import java.util.Optional;
- 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
  
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.CartItem;
 import com.uade.tpo.demo.Entity.Product;
+import com.uade.tpo.demo.Entity.dto.CartDTO;
+import com.uade.tpo.demo.Entity.dto.CartItemDTO;
 import com.uade.tpo.demo.repository.CartRepository;
 import com.uade.tpo.demo.repository.ProductRepository;
  
@@ -17,6 +20,7 @@ public class CartServiceImpl implements CartService {
  
     @Autowired
     private CartRepository cartRepository;
+
  
     @Autowired
     private ProductRepository productRepository;
@@ -27,12 +31,12 @@ public class CartServiceImpl implements CartService {
     }
  
     @Override
-    public Cart updateCart(Long id, Cart cart) {
+    public void updateCart(Long id, Cart cart) {
         Optional<Cart> existingCart = cartRepository.findById(id);
         if (existingCart.isPresent()) {
             Cart updatedCart = existingCart.get();
             updatedCart.setItems(cart.getItems());
-            return cartRepository.save(updatedCart);
+            cartRepository.save(updatedCart);
         } else {
             throw new RuntimeException("Cart not found with id " + id);
         }
@@ -44,18 +48,45 @@ public class CartServiceImpl implements CartService {
     }
  
     @Override
+    public CartDTO getCartByIdDTO(Long id) {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cart not found with id " + id));
+    
+        return new CartDTO(
+                cart.getId(),
+                cart.getItems().stream()
+                    .map(cartItem -> new CartItemDTO(
+                        cartItem.getId(),
+                        cartItem.getProduct() != null ? cartItem.getProduct().getId() : null,
+                        cartItem.getQuantity()))
+                    .collect(Collectors.toList())
+        );
+    }
+
+    @Override
     public Cart getCartById(Long id) {
         return cartRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Cart not found with id " + id));
     }
  
-    @Override
-    public List<Cart> getAllCarts() {
-        return cartRepository.findAll();
+   @Override
+    public List<CartDTO> getAllCarts() {
+                List<Cart> carts = cartRepository.findAll();
+
+                return carts.stream()
+                        .map(cart -> new CartDTO(
+                            cart.getId(),
+                            cart.getItems().stream()
+                                .map(cartItem -> new CartItemDTO(
+                                    cartItem.getId(),
+                                    cartItem.getProduct() != null ? cartItem.getProduct().getId() : null,
+                                    cartItem.getQuantity()))
+                                .collect(Collectors.toList())))
+                    .collect(Collectors.toList());
     }
  
     @Override
-    public Cart addProductToCart(Long cartId, Long productId, int quantity) {
+    public void addProductToCart(Long cartId, Long productId, int quantity) {
         // Obtener el carrito por su ID
         Cart cart = getCartById(cartId);
    
@@ -74,12 +105,12 @@ public class CartServiceImpl implements CartService {
             cart.getItems().add(item);  
      
         // Guardar y devolver el carrito actualizado
-        return cartRepository.save(cart);
+         cartRepository.save(cart);
     }
    
  
     @Override
-    public Cart removeProductFromCart(Long cartId, Long productId) {
+    public void removeProductFromCart(Long cartId, Long productId) {
         Cart cart = getCartById(cartId);
         CartItem itemToRemove = cart.getItems().stream()
             .filter(i -> i.getProduct().getId().equals(productId))
@@ -88,12 +119,12 @@ public class CartServiceImpl implements CartService {
  
         cart.getItems().remove(itemToRemove);
         productRepository.save(itemToRemove.getProduct());
-        return cartRepository.save(cart);
+        cartRepository.save(cart);
  
     }
  
     @Override
-    public Cart updateProductQuantityInCart(Long cartId, Long productId, int quantity) {
+    public void updateProductQuantityInCart(Long cartId, Long productId, int quantity) {
         Cart cart = getCartById(cartId);
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
@@ -108,7 +139,7 @@ public class CartServiceImpl implements CartService {
             throw new RuntimeException("Not enough stock for product with id " + productId);
         }
         item.setQuantity(quantity);
-        return cartRepository.save(cart);
+         cartRepository.save(cart);
     }
  
     @Override

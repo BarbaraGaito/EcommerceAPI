@@ -54,8 +54,8 @@ public class CatalogoController {
             @PathVariable Long cartId,
             @RequestBody AddProductToCartRequest request) {
 
-        Cart updatedCart = cartService.addProductToCart(cartId, request.getProductId(), request.getQuantity());
-        return new ResponseEntity<>(updatedCart, HttpStatus.OK);
+        cartService.addProductToCart(cartId, request.getProductId(), request.getQuantity());
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
 }
