@@ -32,7 +32,7 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.POST, "/categories/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                                                   
                                                 //ORDER
                                                 .requestMatchers(HttpMethod.GET, "/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
-                                                .requestMatchers(HttpMethod.POST,"/oreder/**").permitAll()//hasAnyAuthority(Role.USER.name())
+                                                .requestMatchers(HttpMethod.POST,"/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
                                                 .requestMatchers(HttpMethod.DELETE, "/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
                                                 //CARRITO
                                                 .requestMatchers("/cart/**").permitAll()//hasAnyAuthority(Role.USER.name())                       

@@ -77,7 +77,7 @@ public class CatalogoServiceImpl implements CatalogoService {
     @Override
     public void addProductToCart(Long cartId, Long productId, int quantity) {
         try {
-            Cart cart = cartService.getCartById(cartId);  // Obtener el carrito directamente aquí
+            Cart cart = cartService.getCartById(cartId); 
             Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
     
@@ -85,27 +85,22 @@ public class CatalogoServiceImpl implements CatalogoService {
                 throw new RuntimeException("Not enough stock for product with id " + productId);
             }
     
-            // Busca si el producto ya está en el carrito
             CartItem item = cart.getItems().stream()
                 .filter(i -> i.getProduct() != null && i.getProduct().getId().equals(productId))
                 .findFirst()
                 .orElse(null);
     
             if (item == null) {
-                // El producto no está en el carrito, así que lo agregamos
                 item = new CartItem();
                 item.setProduct(product);
                 item.setQuantity(quantity);
                 cart.getItems().add(item);
             } else {
-                // El producto ya está en el carrito, actualizamos la cantidad
                 item.setQuantity(item.getQuantity() + quantity);
             }
     
             product.setStock(product.getStock() - quantity);
             productRepository.save(product);
-    
-            // Solo guarda el carrito si se ha modificado
             cartRepository.save(cart);
         } catch (Exception e) {
             throw new RuntimeException("An error occurred while adding product to cart.", e);
