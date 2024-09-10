@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.uade.tpo.demo.Entity.Category;
 import com.uade.tpo.demo.Entity.Product;
 import com.uade.tpo.demo.Entity.ProductImage;
+import com.uade.tpo.demo.Entity.dto.ProductDTO;
 import com.uade.tpo.demo.service.CategoryService;
 import com.uade.tpo.demo.service.ProductService;
 
@@ -74,9 +75,9 @@ public class ProductController {
             product.getImages().add(productImage);
         }
 
-        Product createdProduct = productService.createProduct(product);
+        productService.createProduct(product);
 
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -122,9 +123,9 @@ public class ProductController {
             }
         }
     
-        Product updatedProduct = productService.updateProduct(id, product);
+        productService.updateProduct(id, product);
     
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
     
 
@@ -135,8 +136,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Product product = productService.getProductById(id);
+    public ResponseEntity<ProductDTO> getProductByIdDTO(@PathVariable Long id) {
+        ProductDTO product = productService.getProductByIdDTO(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 

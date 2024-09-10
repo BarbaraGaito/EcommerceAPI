@@ -6,16 +6,26 @@ public class ProductDTO {
     private String description;
     private Double price;
     private Integer stock;
+    private double discount;
     private String categoryDescription;
 
     // Constructor
-    public ProductDTO(Long id, String name, String description, Double price, Integer stock, String categoryDescription) {
+    public ProductDTO(Long id, String name, String description, Double price, Integer stock,double discount ,String categoryDescription) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
+        this.discount= discount;
         this.categoryDescription = categoryDescription;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 
     // Getters y Setters

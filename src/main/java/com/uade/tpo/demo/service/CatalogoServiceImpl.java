@@ -40,6 +40,7 @@ public class CatalogoServiceImpl implements CatalogoService {
                     product.getDescription(),
                     product.getPrice(),
                     product.getStock(),
+                    product.getDiscount(),
                     product.getCategory() != null ? product.getCategory().getDescription() : null))
                 .collect(Collectors.toList());
     }
@@ -55,6 +56,7 @@ public class CatalogoServiceImpl implements CatalogoService {
                 product.getDescription(),
                 product.getPrice(),
                 product.getStock(),
+                product.getDiscount(),
                 product.getCategory() != null ? product.getCategory().getDescription() : null))
             .collect(Collectors.toList());
     }
@@ -69,6 +71,7 @@ public class CatalogoServiceImpl implements CatalogoService {
                 product.getDescription(),
                 product.getPrice(),
                 product.getStock(),
+                product.getDiscount(),
                 product.getCategory() != null ? product.getCategory().getDescription() : null))
             .collect(Collectors.toList());
     }
