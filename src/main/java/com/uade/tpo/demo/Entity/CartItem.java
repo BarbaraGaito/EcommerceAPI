@@ -22,7 +22,7 @@ public class CartItem {
 
     @OneToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @JsonIgnore
+  
     private Product product;
 
     @Column(nullable = false)
