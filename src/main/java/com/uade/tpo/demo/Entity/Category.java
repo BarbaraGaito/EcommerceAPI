@@ -1,6 +1,14 @@
 package com.uade.tpo.demo.Entity;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
@@ -22,8 +30,6 @@ public class Category {
     @Column
     private String description;
 
-    @OneToOne(mappedBy = "category")
-    private Product product;
+    @OneToMany(mappedBy = "category") 
+    private List<Product> products;
 }
-
-
