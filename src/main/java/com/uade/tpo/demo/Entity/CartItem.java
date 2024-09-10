@@ -1,30 +1,25 @@
 package com.uade.tpo.demo.Entity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+ 
+import jakarta.persistence.*;
 import lombok.Data;
-
+ 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+ 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "cartItems")
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+ 
     @OneToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @JsonIgnore
     private Product product;
-
+ 
     @Column(nullable = false)
-    private Integer quantity=0;
+    private Integer quantity = 0;
 }

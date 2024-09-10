@@ -1,7 +1,7 @@
 package com.uade.tpo.demo.controllers.cart;
-
+ 
 import java.util.List;
-
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+ 
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.service.CartService;
-
+ 
 @RestController
 @RequestMapping("/cart")
 public class CartController {
-
+ 
     @Autowired
     private CartService cartService;
  
@@ -54,7 +54,6 @@ public class CartController {
         List<Cart> carts = cartService.getAllCarts();
         return new ResponseEntity<>(carts, HttpStatus.OK);
     }
-    
     @PutMapping("/{cartId}/add-product/{productId}/{quantity}")
     public ResponseEntity<Cart> addProductToCart(
             @PathVariable Long cartId,
@@ -80,6 +79,8 @@ public class CartController {
         Cart updatedCart = cartService.updateProductQuantityInCart(cartId, productId, quantity);
         return new ResponseEntity<>(updatedCart, HttpStatus.OK);
     }
+   
+
     @PutMapping("/{cartId}/finish")
     public ResponseEntity<Double> finishCart(@PathVariable Long cartId) {
         // Llamar al servicio para finalizar el carrito y obtener el precio total

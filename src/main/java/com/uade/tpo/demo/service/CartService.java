@@ -1,9 +1,9 @@
 package com.uade.tpo.demo.service;
-
+ 
 import java.util.List;
-
+ 
 import com.uade.tpo.demo.Entity.Cart;
-
+ 
 public interface CartService {
     Cart createCart(Cart cart);
     Cart updateCart(Long id, Cart cart);
