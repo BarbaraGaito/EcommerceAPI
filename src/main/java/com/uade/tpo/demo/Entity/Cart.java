@@ -31,7 +31,7 @@ public class Cart {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cart_id")
-    @JsonIgnore
+   
     private List<CartItem> items;
 
     @Column(nullable = false)

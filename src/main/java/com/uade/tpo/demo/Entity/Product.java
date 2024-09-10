@@ -39,7 +39,7 @@ public class Product {
     private Integer stock;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore 
+ 
     private List<ProductImage> images;  
 
     @ManyToOne
