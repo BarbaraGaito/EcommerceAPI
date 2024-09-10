@@ -75,46 +75,41 @@ public class CatalogoServiceImpl implements CatalogoService {
 
     
     @Override
-public void addProductToCart(Long cartId, Long productId, int quantity) {
-    try {
-        // Obtener el carrito de la base de datos
-        Cart cart = cartService.getCartById(cartId);  
-        
-        // Obtener el producto de la base de datos
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
-
-        // Verificar si hay suficiente stock
-        if (product.getStock() < quantity) {
-            throw new RuntimeException("Not enough stock for product with id " + productId);
+    public void addProductToCart(Long cartId, Long productId, int quantity) {
+        try {
+            Cart cart = cartService.getCartById(cartId);  // Obtener el carrito directamente aquí
+            Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
+    
+            if (product.getStock() < quantity) {
+                throw new RuntimeException("Not enough stock for product with id " + productId);
+            }
+    
+            // Busca si el producto ya está en el carrito
+            CartItem item = cart.getItems().stream()
+                .filter(i -> i.getProduct() != null && i.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElse(null);
+    
+            if (item == null) {
+                // El producto no está en el carrito, así que lo agregamos
+                item = new CartItem();
+                item.setProduct(product);
+                item.setQuantity(quantity);
+                cart.getItems().add(item);
+            } else {
+                // El producto ya está en el carrito, actualizamos la cantidad
+                item.setQuantity(item.getQuantity() + quantity);
+            }
+    
+            product.setStock(product.getStock() - quantity);
+            productRepository.save(product);
+    
+            // Solo guarda el carrito si se ha modificado
+            cartRepository.save(cart);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while adding product to cart.", e);
         }
-
-        // Buscar si el producto ya está en el carrito
-        CartItem item = cart.getItems().stream()
-            .filter(i -> i.getProduct() != null && i.getProduct().getId().equals(productId))
-            .findFirst()
-            .orElse(null);
-
-        // Si no está en el carrito, crear uno nuevo
-        if (item == null) {
-            item = new CartItem();
-            item.setProduct(product);
-            item.setQuantity(quantity);
-            item.setCart(cart);  // Asegurarse de establecer la relación entre CartItem y Cart
-            cart.getItems().add(item);
-        } else {
-            // Si ya existe, solo actualiza la cantidad
-            item.setQuantity(item.getQuantity() + quantity);
-        }
-
-        // Restar el stock del producto
-        product.setStock(product.getStock() - quantity);
-        productRepository.save(product);  // Guardar los cambios del producto
-
-        cartRepository.save(cart);  // Guardar los cambios del carrito
-    } catch (Exception e) {
-        throw new RuntimeException("An error occurred while adding product to cart.", e);
     }
-}
-
+    
 }
