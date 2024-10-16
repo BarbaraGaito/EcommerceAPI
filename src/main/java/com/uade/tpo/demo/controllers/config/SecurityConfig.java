@@ -1,5 +1,7 @@
 package com.uade.tpo.demo.controllers.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,6 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,46 +23,57 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-        private final JwtAuthenticationFilter jwtAuthFilter;
-        private final AuthenticationProvider authenticationProvider;
+    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http
-                                .csrf(AbstractHttpConfigurer::disable)
-                                .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/**").permitAll()
-                                                .requestMatchers("/error/**").permitAll()
-                                                //CATEGORIAS
-                                                .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/categories/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                                                   
-                                                //ORDER
-                                                .requestMatchers(HttpMethod.GET, "/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
-                                                .requestMatchers(HttpMethod.POST,"/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
-                                                .requestMatchers(HttpMethod.DELETE, "/order/**").permitAll()//hasAnyAuthority(Role.USER.name())
-                                                //CARRITO
-                                                .requestMatchers("/cart/**").permitAll()//hasAnyAuthority(Role.USER.name())                       
-                                                //CATALOGO
-                                                .requestMatchers(HttpMethod.GET,"/catalogo/**").permitAll()
-                                                .requestMatchers(HttpMethod.PUT,"/catalogo/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST,"/catalogo/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                       
-                                                //PRODUCTOS
-                                                .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())  
-                                                .requestMatchers(HttpMethod.DELETE,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())
-                                                .requestMatchers(HttpMethod.PUT,"/products/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())                     
-                                                //USUARIOS
-                                                .requestMatchers("/users/**").permitAll()//hasAnyAuthority(Role.ADMIN.name())
-                                                .anyRequest()
-                                                .authenticated())
-                                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                                .authenticationProvider(authenticationProvider)
-                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilitar CORS
+            .authorizeHttpRequests(req -> req
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/error/**").permitAll()
+                // CATEGORÍAS
+                .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/categories/**").permitAll()
+                // ÓRDENES
+                .requestMatchers(HttpMethod.GET, "/order/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/order/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/order/**").permitAll()
+                // CARRITO
+                .requestMatchers("/cart/**").permitAll()
+                // CATÁLOGO
+                .requestMatchers(HttpMethod.GET, "/catalogo/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/catalogo/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/catalogo/**").permitAll()
+                // PRODUCTOS
+                .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/products/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/products/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/products/**").permitAll()
+                // USUARIOS
+                .requestMatchers("/users/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-                return http.build();
-        }
+        return http.build();
+    }
+
+    // Configuración global de CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // Permitir el origen del frontend
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Métodos permitidos
+        configuration.setAllowedHeaders(List.of("*")); // Permitir todos los headers
+        configuration.setAllowCredentials(true); // Permitir envío de credenciales
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Aplicar la configuración a todas las rutas
+        return source;
+    }
 }
-
-
-
-
-
