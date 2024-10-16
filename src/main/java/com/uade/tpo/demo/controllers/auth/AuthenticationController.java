@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uade.tpo.demo.Entity.Role;
 import com.uade.tpo.demo.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,10 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request) {
+        request.setRole(Role.USER);  // Asignar el rol USER por defecto
         return ResponseEntity.ok(service.register(request));
     }
-
+    
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request) {
