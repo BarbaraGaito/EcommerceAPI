@@ -152,9 +152,7 @@ public class CartServiceImpl implements CartService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Product not found in cart with id " + productId));
      
-            if (product.getStock() < 1) {
-                throw new RuntimeException("Not enough stock for product with id " + productId);
-            }
+            
             item.setQuantity(item.getQuantity()-1);
              cartRepository.save(cart);
             }
