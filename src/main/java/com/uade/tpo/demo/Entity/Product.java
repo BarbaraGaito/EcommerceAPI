@@ -2,7 +2,6 @@ package com.uade.tpo.demo.Entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +45,4 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @Column(nullable = false)
-    private Long sellerId;  // Vínculo con el vendedor
 }
