@@ -23,27 +23,36 @@ public class AuthenticationService {
         private final PasswordEncoder passwordEncoder;
         private final JwtService jwtService;
         private final AuthenticationManager authenticationManager;
-
         public AuthenticationResponse register(RegisterRequest request) {
-                if (!EmailValidation.isValidEmail(request.getEmail()))
-                        throw new RuntimeException("invalid email.");
-
-                if (repository.findByEmail(request.getEmail()).isPresent()) 
-                        throw new RuntimeException("Email is already registered.");
-                    
+                if (!EmailValidation.isValidEmail(request.getEmail())) {
+                    throw new RuntimeException("Invalid email.");
+                }
+            
+                if (repository.findByEmail(request.getEmail()).isPresent()) {
+                    throw new RuntimeException("Email is already registered.");
+                }
+            
+                // Crear el usuario con los datos del request
                 var user = User.builder()
-                                .name(request.getName())
-                                .email(request.getEmail())
-                                .password(passwordEncoder.encode(request.getPassword()))
-                                .role(request.getRole())
-                                .build();
-
+                        .name(request.getName())
+                        .email(request.getEmail())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .role(request.getRole())
+                        .build();
+            
+                // Guardar el usuario en la base de datos
                 repository.save(user);
+            
+                // Generar el token JWT
                 var jwtToken = jwtService.generateToken(user);
+            
+                // Incluir el userId en la respuesta
                 return AuthenticationResponse.builder()
-                                .accessToken(jwtToken)
-                                .build();
-        }
+                        .accessToken(jwtToken)
+                        .userId(user.getId()) // Aquí incluimos el ID del usuario
+                        .build();
+            }
+            
 
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
                 authenticationManager.authenticate(
