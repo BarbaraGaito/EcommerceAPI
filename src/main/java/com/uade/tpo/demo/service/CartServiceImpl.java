@@ -16,6 +16,10 @@ import com.uade.tpo.demo.Entity.Product;
 import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.Entity.dto.CartDTO;
 import com.uade.tpo.demo.Entity.dto.CartItemDTO;
+import com.uade.tpo.demo.Entity.dto.OrderDTO;
+import com.uade.tpo.demo.Entity.dto.OrderItemDTO;
+import com.uade.tpo.demo.Entity.dto.ProductDTO;
+import com.uade.tpo.demo.Entity.dto.UserDTO;
 import com.uade.tpo.demo.repository.CartRepository;
 import com.uade.tpo.demo.repository.OrderRepository;
 import com.uade.tpo.demo.repository.ProductRepository;
@@ -25,6 +29,9 @@ public class CartServiceImpl implements CartService {
  
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderService orderService;
  
     @Autowired
     private CartRepository cartRepository;
@@ -53,6 +60,27 @@ public class CartServiceImpl implements CartService {
             throw new RuntimeException("Cart not found with id " + id);
         }
     }
+
+    @Override
+    public void updateProductQuantityInCart(Long cartId, Long productId, int quantity) {
+    Cart cart = getCartById(cartId);
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
+
+    CartItem item = cart.getItems().stream()
+        .filter(i -> i.getProduct().getId().equals(productId))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Product not found in cart with id " + productId));
+
+    int quantityDifference = quantity - item.getQuantity();
+    if (product.getStock() < quantityDifference) {
+        throw new RuntimeException("Not enough stock for product with id " + productId);
+    }
+    
+    item.setQuantity(quantity);
+    cartRepository.save(cart);
+}
+
  
     @Override
     public void deleteCart(Long id) {
@@ -162,63 +190,68 @@ public class CartServiceImpl implements CartService {
  
  
     @Override
-    public void updateProductQuantityInCart(Long cartId, Long productId, int quantity) {
+    public Double finishCart(Long cartId) {
         Cart cart = getCartById(cartId);
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
- 
-        CartItem item = cart.getItems().stream()
-            .filter(i -> i.getProduct().getId().equals(productId))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("Product not found in cart with id " + productId));
- 
-        int quantityDifference = quantity - item.getQuantity();
-        if (product.getStock() < quantityDifference) {
-            throw new RuntimeException("Not enough stock for product with id " + productId);
+        double total = 0;
+
+        // Calcular el total
+        for (CartItem item : cart.getItems()) {
+            Product product = item.getProduct();
+            int quantity = item.getQuantity();
+
+            if (product.getStock() < quantity) {
+                throw new RuntimeException("Not enough stock for product with id " + product.getId());
+            }
+
+            double productPrice = product.getPrice();
+            if (product.getDiscount() != null && product.getDiscount() > 0) {
+                productPrice = productPrice - (productPrice * product.getDiscount() / 100);
+            }
+
+            total += productPrice * quantity;
+            product.setStock(product.getStock() - quantity);
+            productRepository.save(product);
         }
-        item.setQuantity(quantity);
-         cartRepository.save(cart);
-        }
- 
-@Override
-public Double finishCart(Long cartId) {
-    Cart cart = getCartById(cartId);
-    double total = 0;
- 
-    // Obtener el usuario del carrito
-    User user = userService.getUserById(cart.getUserId());
- 
-    // Crear una nueva orden
-    Order order = new Order();
-    order.setUser(user); // Establecer el usuario
-    order.setTotalPrice(total);
- 
-    for (CartItem item : cart.getItems()) {
-        Product product = item.getProduct();
-        int quantity = item.getQuantity();
- 
-        if (product.getStock() < quantity) {
-            throw new RuntimeException("Not enough stock for product with id " + product.getId());
-        }
- 
-        double productPrice = product.getPrice();
-        if (product.getDiscount() != null && product.getDiscount() > 0) {
-            productPrice = productPrice - (productPrice * product.getDiscount() / 100);
-        }
- 
-        total += productPrice * quantity;
-        product.setStock(product.getStock() - quantity);
-        productRepository.save(product);
+
+        // Obtener el usuario utilizando el userId del carrito
+        User user = userService.getUserById(cart.getUserId());
+
+        // Convertir CartItem a OrderItemDTO
+        List<OrderItemDTO> orderItemsDTO = cart.getItems().stream()
+            .map(cartItem -> {
+                OrderItemDTO orderItemDTO = OrderItemDTO.builder()
+                        .product(new ProductDTO(
+                                cartItem.getProduct().getId(),
+                                cartItem.getProduct().getName(),
+                                cartItem.getProduct().getDescription(),
+                                cartItem.getProduct().getPrice(),
+                                cartItem.getProduct().getStock(),
+                                cartItem.getProduct().getDiscount(),
+                                cartItem.getProduct().getCategory().getDescription())) // Aquí puedes obtener la descripción de la categoría
+                        .quantity(cartItem.getQuantity())
+                        .build();
+                return orderItemDTO;
+            })
+            .collect(Collectors.toList());
+
+        // Crear la nueva orden con OrderDTO
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setTotalPrice(total);
+        orderDTO.setUser(new UserDTO(user.getId(), user.getEmail(), user.getName()));
+        orderDTO.setItems(orderItemsDTO); // Asignar la lista de OrderItemsDTO
+
+        // Crear la orden
+        orderService.createOrder(orderDTO);
+
+        // Vaciar el carrito
+        cart.getItems().clear();
+        cartRepository.save(cart);
+
+        return total;
     }
- 
-    order.setTotalPrice(total);
-    orderRepository.save(order);
- 
-    cart.getItems().clear();
-    cartRepository.save(cart);
- 
-    return total;
-}
+
+            
+        
  
  
     @Override

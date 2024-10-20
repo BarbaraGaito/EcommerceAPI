@@ -1,39 +1,44 @@
 package com.uade.tpo.demo.controllers.order;
- 
-import java.util.List;
+
+import com.uade.tpo.demo.Entity.dto.OrderDTO;
+import com.uade.tpo.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
- 
-import com.uade.tpo.demo.Entity.Order;
-import com.uade.tpo.demo.service.OrderService;
- 
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
 public class OrderController {
- 
+
     @Autowired
     private OrderService orderService;
- 
+
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+        OrderDTO createdOrder = orderService.createOrder(orderDTO);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
- 
+
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        Order order = orderService.getOrderById(id);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
+        OrderDTO orderDTO = orderService.getOrderById(id);
+        return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }
- 
+
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        try {
+            List<OrderDTO> orders = orderService.getAllOrders();
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Manejo de error
+        }
     }
- 
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
