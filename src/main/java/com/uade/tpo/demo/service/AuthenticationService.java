@@ -56,7 +56,7 @@ public class AuthenticationService {
 
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
                 authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
+                    new UsernamePasswordAuthenticationToken(                        
                         request.getEmail(),
                         request.getPassword()));
             
@@ -69,6 +69,8 @@ public class AuthenticationService {
                 return AuthenticationResponse.builder()
                     .accessToken(jwtToken)
                     .userId(user.getId()) // Agregar el ID del usuario a la respuesta
+                    .role(user.getRole())
+                    .name(user.getName())
                     .build();
             }
 }
