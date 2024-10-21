@@ -2,9 +2,6 @@ package com.uade.tpo.demo.Entity;
 
 import java.sql.Blob;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,14 +27,11 @@ public class ProductImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @JsonIgnore
+    @Lob    
     @Column(nullable = false)
     private Blob image; 
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "product_id", nullable = false)
-    @JsonBackReference
+    @ManyToOne    
+    @JoinColumn(name = "product_id", nullable = false)    
     private Product product;  
 }

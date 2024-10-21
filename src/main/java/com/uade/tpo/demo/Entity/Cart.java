@@ -2,7 +2,7 @@ package com.uade.tpo.demo.Entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -35,7 +35,7 @@ public class Cart {
     private List<CartItem> items;
 
     @Column(nullable = false)
-    private Long userId;  // Vínculo con el usuario
+    private Long userId; 
 }
 
 

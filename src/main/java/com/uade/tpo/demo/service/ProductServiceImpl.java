@@ -1,16 +1,16 @@
 package com.uade.tpo.demo.service;
 
-import java.util.List;
+
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.uade.tpo.demo.Entity.Cart;
+
 import com.uade.tpo.demo.Entity.Product;
-import com.uade.tpo.demo.Entity.dto.CartDTO;
-import com.uade.tpo.demo.Entity.dto.CartItemDTO;
+
+
 import com.uade.tpo.demo.Entity.dto.ProductDTO;
 import com.uade.tpo.demo.repository.ProductRepository;
 
