@@ -49,6 +49,13 @@ public OrderDTO createOrder(OrderDTO orderDTO) {
     return convertToOrderDTO(savedOrder);
 }
 
+    @Override
+        public List<OrderDTO> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId).stream() // Asegúrate de tener este método en el repositorio
+                .map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public OrderDTO getOrderById(Long id) {
