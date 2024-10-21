@@ -2,8 +2,6 @@ package com.uade.tpo.demo.Entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,8 +37,7 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)    
     private List<ProductImage> images;  
 
     @ManyToOne

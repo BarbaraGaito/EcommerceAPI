@@ -21,9 +21,6 @@ public class CatalogoServiceImpl implements CatalogoService {
     private CartService cartService;  
 
     @Autowired
-    private ProductService productService;
-
-    @Autowired
     private CartRepository cartRepository;
 
     @Autowired
