@@ -8,4 +8,6 @@ public interface OrderService {
     OrderDTO getOrderById(Long id);
     List<OrderDTO> getAllOrders();
     void deleteOrder(Long id);
+    List<OrderDTO> getOrdersByUserId(Long userId);
+
 }
