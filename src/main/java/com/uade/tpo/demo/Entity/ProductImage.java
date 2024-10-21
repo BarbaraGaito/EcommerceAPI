@@ -27,11 +27,11 @@ public class ProductImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
+    @Lob    
     @Column(nullable = false)
     private Blob image; 
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne    
+    @JoinColumn(name = "product_id", nullable = false)    
     private Product product;  
 }

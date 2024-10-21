@@ -48,9 +48,8 @@ public class ProductController {
         @RequestParam double price,
         @RequestParam double discount,
         @RequestParam int stock,
-        @RequestParam Long sellerId,
         @RequestParam Long categoryId,
-        @RequestParam("images") List<MultipartFile> images) throws IOException, SQLException {
+        @RequestParam(value = "images", required = false) List<MultipartFile> images) throws IOException, SQLException{
 
         Product product = new Product();
         product.setName(name);
@@ -58,7 +57,6 @@ public class ProductController {
         product.setPrice(price);
         product.setDiscount(discount);
         product.setStock(stock);
-        product.setSellerId(sellerId);
         product.setImages(new ArrayList<>());
         
         Category category = categoryService.getCategoryById(categoryId).orElse(null);
@@ -79,7 +77,7 @@ public class ProductController {
 
         productService.createProduct(product);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -105,7 +103,6 @@ public class ProductController {
         if (price != null) product.setPrice(price);
         if (discount != null) product.setDiscount(discount);
         if (stock != null) product.setStock(stock);
-        if (sellerId != null) product.setSellerId(sellerId);
 
         if (categoryId != null) {
             Category category = categoryService.getCategoryById(categoryId).orElse(null);

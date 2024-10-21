@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.dto.AddProductToCartRequest;
 import com.uade.tpo.demo.Entity.dto.ProductDTO;
-import com.uade.tpo.demo.service.CartService;
 import com.uade.tpo.demo.service.CatalogoService;
 
 @RestController
@@ -25,9 +24,6 @@ public class CatalogoController {
 
     @Autowired
     private CatalogoService catalogoService;
-
-    @Autowired
-    private CartService cartService;
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductDTO>> getAllProductsFromCatalog() {

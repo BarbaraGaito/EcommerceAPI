@@ -1,5 +1,8 @@
 package com.uade.tpo.demo.service;
 
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,10 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.Product;
-import com.uade.tpo.demo.Entity.dto.CartDTO;
-import com.uade.tpo.demo.Entity.dto.CartItemDTO;
 import com.uade.tpo.demo.Entity.dto.ProductDTO;
 import com.uade.tpo.demo.repository.ProductRepository;
 
@@ -63,7 +63,20 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO getProductByIdDTO(Long id) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Product not found with id " + id));
-    
+
+        // Convert images from Blob to Base64
+        List<String> imageStrings = product.getImages().stream()
+            .map(image -> {
+                try {
+                    Blob blob = image.getImage();
+                    byte[] imageBytes = blob.getBytes(1, (int) blob.length());
+                    return Base64.getEncoder().encodeToString(imageBytes);
+                } catch (SQLException e) {
+                    throw new RuntimeException("Error reading image", e);
+                }
+            })
+            .collect(Collectors.toList());
+
         return new ProductDTO(
             product.getId(),
             product.getName(),
@@ -71,8 +84,11 @@ public class ProductServiceImpl implements ProductService {
             product.getPrice(),
             product.getStock(),
             product.getDiscount(),
-            product.getCategory() != null ? product.getCategory().getDescription() : null);
+            product.getCategory() != null ? product.getCategory().getDescription() : null,
+            imageStrings // Pass the list of images to the DTO
+        );
     }
+
     
 
 

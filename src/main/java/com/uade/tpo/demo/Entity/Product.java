@@ -2,7 +2,6 @@ package com.uade.tpo.demo.Entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,14 +37,11 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
- 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)    
     private List<ProductImage> images;  
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @Column(nullable = false)
-    private Long sellerId;  // Vínculo con el vendedor
 }

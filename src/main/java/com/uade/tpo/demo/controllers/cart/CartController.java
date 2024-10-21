@@ -118,13 +118,15 @@ public ResponseEntity<Void> clearCart(@PathVariable Long cartId) {
  
  
     @PutMapping("/{cartId}/finish")
-    public ResponseEntity<Double> finishCart(@PathVariable Long cartId) {
-        // Llamar al servicio para finalizar el carrito y obtener el precio total
-        Double totalPrice = cartService.finishCart(cartId);
- 
-        // Retornar el precio total en la respuesta
+public ResponseEntity<Double> finishCart(@PathVariable Long cartId) {
+    try {
+        Double totalPrice = cartService.finishCart(cartId);  // This would still return the total price
         return new ResponseEntity<>(totalPrice, HttpStatus.OK);
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
  
     @GetMapping("/user/{userId}")
     public ResponseEntity<CartDTO> getCartByUserId(@PathVariable Long userId) {
