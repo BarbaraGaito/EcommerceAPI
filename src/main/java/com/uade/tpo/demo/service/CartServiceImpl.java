@@ -239,9 +239,7 @@ public class CartServiceImpl implements CartService {
         // Crear la orden
         orderService.createOrder(orderDTO);
 
-        // Vaciar el carrito
-        cart.getItems().clear();
-        cartRepository.save(cart);
+       
 
         return total;
     }
