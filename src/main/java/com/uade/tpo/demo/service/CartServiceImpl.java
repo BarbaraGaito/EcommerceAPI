@@ -1,6 +1,6 @@
 package com.uade.tpo.demo.service;
  
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
  
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.CartItem;
-import com.uade.tpo.demo.Entity.Order;
-import com.uade.tpo.demo.Entity.OrderItem;
+
+import java.util.ArrayList;
 import com.uade.tpo.demo.Entity.Product;
 import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.Entity.dto.CartDTO;
@@ -21,14 +21,11 @@ import com.uade.tpo.demo.Entity.dto.OrderItemDTO;
 import com.uade.tpo.demo.Entity.dto.ProductDTO;
 import com.uade.tpo.demo.Entity.dto.UserDTO;
 import com.uade.tpo.demo.repository.CartRepository;
-import com.uade.tpo.demo.repository.OrderRepository;
+
 import com.uade.tpo.demo.repository.ProductRepository;
  
 @Service
 public class CartServiceImpl implements CartService {
- 
-    @Autowired
-    private OrderRepository orderRepository;
 
     @Autowired
     private OrderService orderService;
@@ -48,6 +45,7 @@ public class CartServiceImpl implements CartService {
     public Cart createCart(Cart cart) {
         return cartRepository.save(cart);
     }
+
  
     @Override
     public void updateCart(Long id, Cart cart) {
