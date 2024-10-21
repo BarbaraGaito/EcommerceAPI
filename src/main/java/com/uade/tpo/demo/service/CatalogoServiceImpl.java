@@ -99,7 +99,7 @@ public class CatalogoServiceImpl implements CatalogoService {
                 item.setQuantity(item.getQuantity() + quantity);
             }
     
-            product.setStock(product.getStock() - quantity);
+            
             productRepository.save(product);
             cartRepository.save(cart);
         } catch (Exception e) {
