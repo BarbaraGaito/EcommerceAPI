@@ -4,21 +4,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.demo.Entity.Order;
 import com.uade.tpo.demo.Entity.OrderItem;
 import com.uade.tpo.demo.Entity.Product;
+import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.Entity.dto.OrderDTO;
 import com.uade.tpo.demo.Entity.dto.OrderItemDTO;
 import com.uade.tpo.demo.Entity.dto.ProductDTO;
 import com.uade.tpo.demo.Entity.dto.UserDTO;
-import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.repository.OrderRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import com.uade.tpo.demo.Entity.Role;
 
 
 @Service
@@ -28,15 +24,10 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private UserService userService; // Assuming you have a UserService to handle User entities
+    private UserService userService; 
 
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO) {
-        // Verificar si el usuario es ADMIN
-        if (!isUserAdmin()) {
-            throw new RuntimeException("Access denied: User is not authorized to create orders.");
-        }
-
         Order order = new Order();
         order.setTotalPrice(orderDTO.getTotalPrice());
         User user = userService.getUserById(orderDTO.getUser().getId());
@@ -73,19 +64,9 @@ public class OrderServiceImpl implements OrderService {
         return convertToOrderDTO(order);
     }
 
-    private boolean isUserAdmin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(Role.ADMIN.name()));
-    }
 
     @Override
     public List<OrderDTO> getAllOrders() {
-        // Verificar si el usuario es ADMIN
-        if (!isUserAdmin()) {
-            throw new RuntimeException("Access denied: User is not authorized to view orders.");
-        }
-
         return orderRepository.findAll().stream()
                 .map(this::convertToOrderDTO)
                 .collect(Collectors.toList());

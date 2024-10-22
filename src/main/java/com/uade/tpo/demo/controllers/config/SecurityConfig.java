@@ -44,10 +44,15 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/order/**").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/order/**").hasAnyAuthority(Role.ADMIN.name())
                 // CARRITO
-                .requestMatchers("/cart/**").permitAll()                
+                .requestMatchers(HttpMethod.GET, "/cart/**").hasAnyAuthority(Role.USER.name())
+                .requestMatchers(HttpMethod.GET, "/cart/getAll/**").hasAnyAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/cart/{id}**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/cart/user/{userId}**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/cart/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/cart/**").permitAll()           
                 // CATÁLOGO
                 .requestMatchers(HttpMethod.GET, "/catalogo/**").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/catalogo/**").hasAnyAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/catalogo/**").hasAnyAuthority(Role.USER.name(),Role.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/catalogo/**").hasAnyAuthority(Role.ADMIN.name())
                 // PRODUCTOS
                 .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
@@ -55,7 +60,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/products/**").hasAnyAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.PUT, "/products/**").hasAnyAuthority(Role.ADMIN.name())
                 // USUARIOS
-                .requestMatchers("/users/**").hasAnyAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/users/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/**").permitAll() 
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
