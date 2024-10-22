@@ -20,17 +20,14 @@ public class JwtService {
     @Value("${application.security.jwt.expiration}")
     private long jwtExpiration;
 
-    public String generateToken(
-            UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails) {
         return buildToken(userDetails, jwtExpiration);
     }
 
-    private String buildToken(
-            UserDetails userDetails,
-            long expiration) {
+    private String buildToken(UserDetails userDetails, long expiration) {
         return Jwts
                 .builder()
-                .subject(userDetails.getUsername()) // prueba@hotmail.com
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .claim("Gisele", 1234567)
                 .expiration(new Date(System.currentTimeMillis() + expiration))
@@ -57,16 +54,13 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getSecretKey())
-                .build()
+        return Jwts.parser()
+                .setSigningKey(getSecretKey())
                 .parseSignedClaims(token)
-                .getPayload();
+                .getBody();
     }
 
     private SecretKey getSecretKey() {
-        SecretKey secretKeySpec = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-        return secretKeySpec;
+        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 }

@@ -16,6 +16,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.uade.tpo.demo.Entity.Role;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -36,24 +38,24 @@ public class SecurityConfig {
                 .requestMatchers("/error/**").permitAll()
                 // CATEGORÍAS
                 .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/categories/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority(Role.ADMIN.name())
                 // ÓRDENES
-                .requestMatchers(HttpMethod.GET, "/order/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/order/**").hasAnyAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/order/**").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/order/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/order/**").hasAnyAuthority(Role.ADMIN.name())
                 // CARRITO
-                .requestMatchers("/cart/**").permitAll()
+                .requestMatchers("/cart/**").permitAll()                
                 // CATÁLOGO
                 .requestMatchers(HttpMethod.GET, "/catalogo/**").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/catalogo/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/catalogo/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/catalogo/**").hasAnyAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/catalogo/**").hasAnyAuthority(Role.ADMIN.name())
                 // PRODUCTOS
                 .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/products/**").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/products/**").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/products/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/products/**").hasAnyAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/products/**").hasAnyAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/products/**").hasAnyAuthority(Role.ADMIN.name())
                 // USUARIOS
-                .requestMatchers("/users/**").permitAll()
+                .requestMatchers("/users/**").hasAnyAuthority(Role.ADMIN.name())
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
