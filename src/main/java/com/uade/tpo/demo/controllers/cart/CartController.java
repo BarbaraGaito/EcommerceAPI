@@ -52,7 +52,7 @@ public class CartController {
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
  
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<CartDTO>> getAllCarts() {
         List<CartDTO> carts = cartService.getAllCarts();
         return new ResponseEntity<>(carts, HttpStatus.OK);

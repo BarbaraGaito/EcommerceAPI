@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.demo.Entity.Order;
 import com.uade.tpo.demo.Entity.OrderItem;
 import com.uade.tpo.demo.Entity.Product;
+import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.Entity.dto.OrderDTO;
 import com.uade.tpo.demo.Entity.dto.OrderItemDTO;
 import com.uade.tpo.demo.Entity.dto.ProductDTO;
 import com.uade.tpo.demo.Entity.dto.UserDTO;
-import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.repository.OrderRepository;
 
 
@@ -24,30 +24,30 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private UserService userService; // Assuming you have a UserService to handle User entities
+    private UserService userService; 
 
     @Override
-public OrderDTO createOrder(OrderDTO orderDTO) {
-    Order order = new Order();
-    order.setTotalPrice(orderDTO.getTotalPrice());
-    User user = userService.getUserById(orderDTO.getUser().getId());
-    order.setUser(user);
+    public OrderDTO createOrder(OrderDTO orderDTO) {
+        Order order = new Order();
+        order.setTotalPrice(orderDTO.getTotalPrice());
+        User user = userService.getUserById(orderDTO.getUser().getId());
+        order.setUser(user);
 
-    List<OrderItem> orderItems = orderDTO.getItems().stream()
-            .map(itemDTO -> {
-                OrderItem orderItem = new OrderItem();
-                orderItem.setQuantity(itemDTO.getQuantity());
-                Product product = new Product(); // Asumiendo que necesitas recuperar el producto completo
-                product.setId(itemDTO.getProduct().getId()); // Aquí puedes añadir más propiedades si es necesario
-                orderItem.setProduct(product);
-                return orderItem;
-            })
-            .collect(Collectors.toList());
+        List<OrderItem> orderItems = orderDTO.getItems().stream()
+                .map(itemDTO -> {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setQuantity(itemDTO.getQuantity());
+                    Product product = new Product();
+                    product.setId(itemDTO.getProduct().getId());
+                    orderItem.setProduct(product);
+                    return orderItem;
+                })
+                .collect(Collectors.toList());
 
-    order.setItems(orderItems);
-    Order savedOrder = orderRepository.save(order);
-    return convertToOrderDTO(savedOrder);
-}
+        order.setItems(orderItems);
+        Order savedOrder = orderRepository.save(order);
+        return convertToOrderDTO(savedOrder);
+    }
 
     @Override
         public List<OrderDTO> getOrdersByUserId(Long userId) {
@@ -63,6 +63,7 @@ public OrderDTO createOrder(OrderDTO orderDTO) {
                 .orElseThrow(() -> new RuntimeException("Order not found with id " + id));
         return convertToOrderDTO(order);
     }
+
 
     @Override
     public List<OrderDTO> getAllOrders() {

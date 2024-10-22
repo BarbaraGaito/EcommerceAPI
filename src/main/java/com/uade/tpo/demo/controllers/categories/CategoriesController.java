@@ -36,7 +36,14 @@ public ResponseEntity<List<CategoryDTO>> getCategories() {
     return ResponseEntity.ok(categoryDTOs);
 }
 
-
+@GetMapping("/admin")
+public ResponseEntity<List<CategoryDTO>> getCategoriesAdmin() {
+    List<Category> categories = categoryService.getCategories();
+    List<CategoryDTO> categoryDTOs = categories.stream()
+                                               .map(c -> new CategoryDTO(c.getId(), c.getDescription()))
+                                               .collect(Collectors.toList());
+    return ResponseEntity.ok(categoryDTOs);
+}
     @GetMapping("/{categoryId}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long categoryId) {
         Optional<Category> result = categoryService.getCategoryById(categoryId);
