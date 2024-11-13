@@ -35,5 +35,24 @@ public class CategoryServiceImpl implements CategoryService {
     
         throw new CategoryDuplicateException();
     }
+
+    @Override
+    public Category updateCategory(Long categoryId, String description) {
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+        if (categoryOptional.isPresent()) {
+            Category category = categoryOptional.get();
+            category.setDescription(description);  
+            return categoryRepository.save(category);
+        }
+        return null;  
+    }
+
+    @Override
+    public void deleteCategory(Long categoryId) {
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+        if (categoryOptional.isPresent()) {
+            categoryRepository.delete(categoryOptional.get());
+        }
+    }
     
 }
