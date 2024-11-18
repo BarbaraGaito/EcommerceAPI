@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -81,7 +83,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(
+    public ResponseEntity<ProductDTO> updateProduct(
             @PathVariable Long id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String description,
@@ -123,8 +125,32 @@ public class ProductController {
         }
     
         productService.updateProduct(id, product);
-    
-        return new ResponseEntity<>( HttpStatus.OK);
+
+        List<String> imageStrings = product.getImages().stream()
+        .map(image -> {
+            try {
+                Blob blob = image.getImage();
+                byte[] imageBytes = blob.getBytes(1, (int) blob.length());
+                return Base64.getEncoder().encodeToString(imageBytes);
+            } catch (SQLException e) {
+                throw new RuntimeException("Error reading image", e);
+            }
+        })
+        .collect(Collectors.toList()); 
+
+        ProductDTO productoActualizado = new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStock(),
+                product.getDiscount(),
+                product.getCategory() != null ? product.getCategory().getDescription() : null,
+                imageStrings 
+            );
+
+        
+        return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
     }
     
 
