@@ -19,4 +19,6 @@ public class AuthenticationResponse {
     private Long userId; 
     private Role role;
     private String name;
+    private String email;
+
 }

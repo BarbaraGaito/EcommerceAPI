@@ -1,17 +1,15 @@
 package com.uade.tpo.demo.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.controllers.auth.AuthenticationRequest;
 import com.uade.tpo.demo.controllers.auth.AuthenticationResponse;
 import com.uade.tpo.demo.controllers.auth.RegisterRequest;
 import com.uade.tpo.demo.controllers.config.JwtService;
-import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -49,7 +47,10 @@ public class AuthenticationService {
                 // Incluir el userId en la respuesta
                 return AuthenticationResponse.builder()
                         .accessToken(jwtToken)
-                        .userId(user.getId()) // Aquí incluimos el ID del usuario
+                        .userId(user.getId()) // Agregar el ID del usuario a la respuesta
+                        .role(user.getRole())
+                        .name(user.getName())
+                        .email(user.getEmail()) // Aquí incluimos el ID del usuario
                         .build();
             }
             
@@ -71,6 +72,7 @@ public class AuthenticationService {
                     .userId(user.getId()) // Agregar el ID del usuario a la respuesta
                     .role(user.getRole())
                     .name(user.getName())
+                    .email(user.getEmail())
                     .build();
             }
 }
