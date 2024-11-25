@@ -150,38 +150,71 @@ public class CartServiceImpl implements CartService {
     }
  
     @Override
-    public void incOne(Long cartId, Long productId) {
+    public CartItemDTO incOne(Long cartId, Long productId) {
         Cart cart = getCartById(cartId);
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
- 
+    
         CartItem item = cart.getItems().stream()
             .filter(i -> i.getProduct().getId().equals(productId))
             .findFirst()
             .orElseThrow(() -> new RuntimeException("Product not found in cart with id " + productId));
- 
+    
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
+    
         if (product.getStock() <= item.getQuantity()) {
             throw new RuntimeException("Not enough stock for product with id " + productId);
         }
-        item.setQuantity(item.getQuantity()+1);
-         cartRepository.save(cart);
-        }
+    
+        // Incrementar la cantidad
+        item.setQuantity(item.getQuantity() + 1);
+    
+        // Guardar los cambios en el carrito
+        cartRepository.save(cart);
+    
+        // Convertir a CartItemDTO y devolver
+        return new CartItemDTO(
+            item.getId(),
+            item.getProduct().getId(),
+            item.getQuantity()
+        );
+    }
+    
+
  
-        @Override
-        public void decOne(Long cartId, Long productId) {
-            Cart cart = getCartById(cartId);
-            Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
-     
-            CartItem item = cart.getItems().stream()
-                .filter(i -> i.getProduct().getId().equals(productId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Product not found in cart with id " + productId));
-     
-            
-            item.setQuantity(item.getQuantity()-1);
-             cartRepository.save(cart);
-            }
+    @Override
+    public CartItemDTO decOne(Long cartId, Long productId) {
+        // Obtener el carrito por ID
+        Cart cart = getCartById(cartId);
+    
+        // Buscar el CartItem en el carrito
+        CartItem item = cart.getItems().stream()
+            .filter(i -> i.getProduct() != null && i.getProduct().getId().equals(productId))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Product not found in cart with id " + productId));
+    
+        // Verificar si el producto existe
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
+    
+        // Verificar que la cantidad no sea menor a 1
+        if (item.getQuantity() <= 1) {
+            throw new RuntimeException("Cannot decrement quantity below 1 for product with id " + productId);
+        }
+    
+        // Decrementar la cantidad
+        item.setQuantity(item.getQuantity() - 1);
+    
+        // Guardar los cambios en el carrito
+        cartRepository.save(cart);
+    
+        // Convertir a CartItemDTO y devolver
+        return new CartItemDTO(
+            item.getId(),
+            item.getProduct().getId(),
+            item.getQuantity()
+        );
+    }
+    
    
  
  

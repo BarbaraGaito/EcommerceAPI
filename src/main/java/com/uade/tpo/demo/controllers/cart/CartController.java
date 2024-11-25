@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
  
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.dto.CartDTO;
+import com.uade.tpo.demo.Entity.dto.CartItemDTO;
+import com.uade.tpo.demo.Entity.dto.ProductDTO;
 import com.uade.tpo.demo.service.CartService;
  
 @CrossOrigin(origins = "http://localhost:5173")
@@ -80,31 +82,34 @@ public class CartController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PutMapping("/incOne")
-    public ResponseEntity<Void> incOne(@RequestParam Long cartId,
-    @RequestParam Long productId) {
-        try {
-            // Llamar al servicio para actualizar la cantidad del producto
-            cartService.incOne(cartId, productId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            // Manejo de errores en caso de que algo salga mal
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+@PutMapping("/incOne")
+public ResponseEntity<CartItemDTO> incOne(@RequestParam Long cartId, @RequestParam Long productId) {
+    try {
+        // Llamar al servicio para actualizar la cantidad y obtener el CartItemDTO
+        CartItemDTO updatedItem = cartService.incOne(cartId, productId);
+        return new ResponseEntity<>(updatedItem, HttpStatus.OK);
+    } catch (Exception e) {
+        // Manejo de errores en caso de que algo salga mal
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
+
  
-    @PutMapping("/decOne")
-    public ResponseEntity<Void> decOne(@RequestParam Long cartId,
-    @RequestParam Long productId) {
-        try {
-            // Llamar al servicio para actualizar la cantidad del producto
-            cartService.decOne(cartId, productId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            // Manejo de errores en caso de que algo salga mal
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+@PutMapping("/decOne")
+public ResponseEntity<CartItemDTO> decOne(@RequestParam Long cartId, @RequestParam Long productId) {
+    try {
+        // Llamar al servicio para actualizar la cantidad del producto y obtener el DTO
+        CartItemDTO updatedItem = cartService.decOne(cartId, productId);
+
+        // Devolver el DTO con el estado HTTP 200 OK
+        return new ResponseEntity<>(updatedItem, HttpStatus.OK);
+    } catch (Exception e) {
+        // Manejo de errores en caso de que algo salga mal
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
  
     @PutMapping("/{cartId}/clear")
 public ResponseEntity<Void> clearCart(@PathVariable Long cartId) {

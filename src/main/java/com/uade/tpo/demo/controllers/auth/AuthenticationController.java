@@ -21,7 +21,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request) {
-            request.setRole(Role.USER);  // Asignar el rol USER por defecto
+            request.setRole(Role.ADMIN);  // Asignar el rol USER por defecto
         return ResponseEntity.ok(service.register(request));
     }
     
