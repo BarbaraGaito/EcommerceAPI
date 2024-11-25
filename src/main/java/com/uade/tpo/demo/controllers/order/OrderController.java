@@ -36,10 +36,9 @@ public class OrderController {
             List<OrderDTO> orders = orderService.getAllOrders();
             return new ResponseEntity<>(orders, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Manejo de error
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); 
         }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {

@@ -6,6 +6,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ProductImageService {
     public ProductImage create(ProductImage image);
-
     public ProductImage viewById(long id);
 }

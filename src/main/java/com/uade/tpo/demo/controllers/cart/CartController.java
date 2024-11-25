@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.dto.CartDTO;
 import com.uade.tpo.demo.Entity.dto.CartItemDTO;
-import com.uade.tpo.demo.Entity.dto.ProductDTO;
 import com.uade.tpo.demo.service.CartService;
  
 @CrossOrigin(origins = "http://localhost:5173")

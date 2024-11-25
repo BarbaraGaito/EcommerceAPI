@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
         public List<OrderDTO> getOrdersByUserId(Long userId) {
-        return orderRepository.findByUserId(userId).stream() // Asegúrate de tener este método en el repositorio
+        return orderRepository.findByUserId(userId).stream() 
                 .map(this::convertToOrderDTO)
                 .collect(Collectors.toList());
     }
@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
                             item.getProduct().getPrice(),
                             item.getProduct().getStock(),
                             item.getProduct().getDiscount(),
-                            item.getProduct().getCategory().getDescription())) // Asumiendo que tienes la descripción de la categoría
+                            item.getProduct().getCategory().getDescription())) 
                     .quantity(item.getQuantity())
                     .build())
             .collect(Collectors.toList());

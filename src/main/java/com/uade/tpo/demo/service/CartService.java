@@ -4,10 +4,9 @@ import java.util.List;
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.dto.CartDTO;
 import com.uade.tpo.demo.Entity.dto.CartItemDTO;
-import com.uade.tpo.demo.Entity.dto.ProductDTO;
  
 public interface CartService {
-    // Otros métodos ya existentes
+    
     Cart createCart(Cart cart);
     void updateCart(Long id, Cart cart);
     void deleteCart(Long id);
@@ -21,6 +20,5 @@ public interface CartService {
     CartItemDTO decOne(Long cartId, Long productId);
     void clearCart(Long cartId);
  
-    // Nuevo método para obtener carrito por userId
     CartDTO getCartByUserId(Long userId);
 }
