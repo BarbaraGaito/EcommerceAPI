@@ -17,5 +17,5 @@ public class AddProductToCartRequest {
         this.quantity = quantity;
     }
 
-    // Getters y Setters
+    
 }

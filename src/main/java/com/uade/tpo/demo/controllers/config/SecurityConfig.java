@@ -39,8 +39,7 @@ public class SecurityConfig {
                 // CATEGORÍAS
                 .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/categories/admin/**").hasAnyAuthority(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.POST, "/categories/**").permitAll()
-                //hasAnyAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.PUT, "/categories/**").hasAnyAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/categories/**").hasAnyAuthority(Role.ADMIN.name())
                 // ÓRDENES
@@ -61,8 +60,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/catalogo/**").permitAll()
                 // PRODUCTOS
                 .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/products/**").permitAll()
-                //hasAnyAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/products/**").hasAnyAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/products/**").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/products/**").hasAnyAuthority(Role.ADMIN.name())
                 // USUARIOS
