@@ -163,9 +163,9 @@ public class CartServiceImpl implements CartService {
         if (product.getStock() <= item.getQuantity()) {
             throw new RuntimeException("Not enough stock for product with id " + productId);
         }
-            
+    
         item.setQuantity(item.getQuantity() + 1);
-        
+    
         cartRepository.save(cart);
     
         return new CartItemDTO(
@@ -182,7 +182,6 @@ public class CartServiceImpl implements CartService {
         
         Cart cart = getCartById(cartId);
     
-        
         CartItem item = cart.getItems().stream()
             .filter(i -> i.getProduct() != null && i.getProduct().getId().equals(productId))
             .findFirst()
@@ -192,15 +191,15 @@ public class CartServiceImpl implements CartService {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
     
-        
         if (item.getQuantity() <= 1) {
             throw new RuntimeException("Cannot decrement quantity below 1 for product with id " + productId);
         }
-            
+
         item.setQuantity(item.getQuantity() - 1);
-        
+    
         cartRepository.save(cart);
-        
+    
+      
         return new CartItemDTO(
             item.getId(),
             item.getProduct().getId(),
