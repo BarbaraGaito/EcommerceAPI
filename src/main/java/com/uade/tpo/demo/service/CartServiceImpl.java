@@ -187,10 +187,6 @@ public class CartServiceImpl implements CartService {
             .findFirst()
             .orElseThrow(() -> new RuntimeException("Product not found in cart with id " + productId));
     
-        
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
-    
         if (item.getQuantity() <= 1) {
             throw new RuntimeException("Cannot decrement quantity below 1 for product with id " + productId);
         }

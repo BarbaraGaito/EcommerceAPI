@@ -30,7 +30,7 @@ public class AuthenticationService {
                     throw new RuntimeException("Email is already registered.");
                 }
             
-                // Crear el usuario con los datos del request
+                
                 var user = User.builder()
                         .name(request.getName())
                         .email(request.getEmail())
@@ -38,19 +38,19 @@ public class AuthenticationService {
                         .role(request.getRole())
                         .build();
             
-                // Guardar el usuario en la base de datos
+                
                 repository.save(user);
             
-                // Generar el token JWT
+                
                 var jwtToken = jwtService.generateToken(user);
             
-                // Incluir el userId en la respuesta
+                
                 return AuthenticationResponse.builder()
                         .accessToken(jwtToken)
-                        .userId(user.getId()) // Agregar el ID del usuario a la respuesta
+                        .userId(user.getId()) 
                         .role(user.getRole())
                         .name(user.getName())
-                        .email(user.getEmail()) // Aquí incluimos el ID del usuario
+                        .email(user.getEmail())
                         .build();
             }
             
@@ -64,12 +64,12 @@ public class AuthenticationService {
                 var user = repository.findByEmail(request.getEmail())
                     .orElseThrow();
                 
-                // Aquí asegúrate de que el método generateToken incluya el ID del usuario
+                
                 var jwtToken = jwtService.generateToken(user);
                 
                 return AuthenticationResponse.builder()
                     .accessToken(jwtToken)
-                    .userId(user.getId()) // Agregar el ID del usuario a la respuesta
+                    .userId(user.getId()) 
                     .role(user.getRole())
                     .name(user.getName())
                     .email(user.getEmail())

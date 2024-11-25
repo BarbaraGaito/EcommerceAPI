@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Product not found with id " + id));
 
-        // Convert images from Blob to Base64
+        
         List<String> imageStrings = product.getImages().stream()
             .map(image -> {
                 try {
@@ -85,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
             product.getStock(),
             product.getDiscount(),
             product.getCategory() != null ? product.getCategory().getDescription() : null,
-            imageStrings // Pass the list of images to the DTO
+            imageStrings 
         );
     }
 

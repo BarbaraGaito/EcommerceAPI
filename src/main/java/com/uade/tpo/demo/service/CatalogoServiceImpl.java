@@ -35,7 +35,7 @@ public class CatalogoServiceImpl implements CatalogoService {
 
         return products.stream()
                 .map(product -> {
-                    // Obtener todas las imágenes o una lista vacía si no hay imágenes
+                    
                     List<String> imageStrings = product.getImages().stream()
                 .map(image -> {
                     try {
@@ -56,7 +56,7 @@ public class CatalogoServiceImpl implements CatalogoService {
                         product.getStock(),
                         product.getDiscount(),
                         product.getCategory() != null ? product.getCategory().getDescription() : null,
-                        imageStrings // Pasamos todas las imágenes en formato Base64
+                        imageStrings 
                     );
                 })
                 .collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class CatalogoServiceImpl implements CatalogoService {
         return productRepository.findAll().stream()
             .filter(product -> product.getCategory() != null && product.getCategory().getId().equals(categoryId))
             .map(product -> {
-                // Obtener todas las imágenes en formato Base64
+                
                 List<String> imageStrings = product.getImages().stream()
                     .map(image -> {
                         try {
@@ -91,7 +91,7 @@ public class CatalogoServiceImpl implements CatalogoService {
                     product.getStock(),
                     product.getDiscount(),
                     product.getCategory() != null ? product.getCategory().getDescription() : null,
-                    imageStrings // Pasamos todas las imágenes en formato Base64
+                    imageStrings 
                 );
             })
             .collect(Collectors.toList());
@@ -103,7 +103,7 @@ public class CatalogoServiceImpl implements CatalogoService {
         return productRepository.findAll().stream()
             .filter(product -> product.getPrice() >= minPrice && product.getPrice() <= maxPrice)
             .map(product -> {
-                // Obtener todas las imágenes en formato Base64
+               
                 List<String> imageStrings = product.getImages().stream()
                     .map(image -> {
                         try {
@@ -124,7 +124,7 @@ public class CatalogoServiceImpl implements CatalogoService {
                     product.getStock(),
                     product.getDiscount(),
                     product.getCategory() != null ? product.getCategory().getDescription() : null,
-                    imageStrings // Pasamos todas las imágenes en formato Base64
+                    imageStrings 
                 );
             })
             .collect(Collectors.toList());

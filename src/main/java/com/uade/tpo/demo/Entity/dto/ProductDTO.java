@@ -19,7 +19,7 @@ public class ProductDTO {
     private String categoryDescription;
     private List<String> images; 
 
-    // Constructor
+    
     public ProductDTO(Long id, String name, String description, Double price, Integer stock, double discount, String categoryDescription, List<String> images) {
         this.id = id;
         this.name = name;
