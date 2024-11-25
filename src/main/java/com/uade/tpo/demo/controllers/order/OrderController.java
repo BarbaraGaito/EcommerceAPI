@@ -17,12 +17,6 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
-        OrderDTO createdOrder = orderService.createOrder(orderDTO);
-        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
         OrderDTO orderDTO = orderService.getOrderById(id);

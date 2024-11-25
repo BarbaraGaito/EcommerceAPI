@@ -44,7 +44,7 @@ public class ProductController {
 
     
     @PostMapping
-    public ResponseEntity<Product> createProduct(
+    public ResponseEntity<ProductDTO> createProduct(
         @RequestParam String name,
         @RequestParam String description,
         @RequestParam double price,
@@ -79,7 +79,29 @@ public class ProductController {
 
         productService.createProduct(product);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        List<String> imageStrings = product.getImages().stream()
+        .map(image -> {
+            try {
+                Blob blob = image.getImage();
+                byte[] imageBytes = blob.getBytes(1, (int) blob.length());
+                return Base64.getEncoder().encodeToString(imageBytes);
+            } catch (SQLException e) {
+                throw new RuntimeException("Error reading image", e);
+            }
+        })
+        .collect(Collectors.toList()); 
+        
+        ProductDTO productoGuardado = new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStock(),
+                product.getDiscount(),
+                product.getCategory() != null ? product.getCategory().getDescription() : null,
+                imageStrings 
+            );
+        return new ResponseEntity<>(productoGuardado, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
