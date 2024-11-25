@@ -27,13 +27,12 @@ public class OrderServiceImpl implements OrderService {
     private UserService userService; 
 
     @Override
-    public OrderDTO createOrder(OrderDTO orderDTO) {
-        Order order = new Order();
-        order.setTotalPrice(orderDTO.getTotalPrice());
-        User user = userService.getUserById(orderDTO.getUser().getId());
+    public Order createOrder(Order order) {
+        order.setTotalPrice(order.getTotalPrice());
+        User user = userService.getUserById(order.getUser().getId());
         order.setUser(user);
 
-        List<OrderItem> orderItems = orderDTO.getItems().stream()
+        List<OrderItem> orderItems = order.getItems().stream()
                 .map(itemDTO -> {
                     OrderItem orderItem = new OrderItem();
                     orderItem.setQuantity(itemDTO.getQuantity());
@@ -46,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setItems(orderItems);
         Order savedOrder = orderRepository.save(order);
-        return convertToOrderDTO(savedOrder);
+        return savedOrder;
     }
 
     @Override

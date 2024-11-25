@@ -10,18 +10,13 @@ import org.springframework.stereotype.Service;
  
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.CartItem;
-
-import java.util.ArrayList;
+import com.uade.tpo.demo.Entity.Order;
+import com.uade.tpo.demo.Entity.OrderItem;
 import com.uade.tpo.demo.Entity.Product;
 import com.uade.tpo.demo.Entity.User;
 import com.uade.tpo.demo.Entity.dto.CartDTO;
 import com.uade.tpo.demo.Entity.dto.CartItemDTO;
-import com.uade.tpo.demo.Entity.dto.OrderDTO;
-import com.uade.tpo.demo.Entity.dto.OrderItemDTO;
-import com.uade.tpo.demo.Entity.dto.ProductDTO;
-import com.uade.tpo.demo.Entity.dto.UserDTO;
 import com.uade.tpo.demo.repository.CartRepository;
-
 import com.uade.tpo.demo.repository.ProductRepository;
  
 @Service
@@ -35,6 +30,10 @@ public class CartServiceImpl implements CartService {
  
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProductService productoService;
+
  
  
  
@@ -223,7 +222,6 @@ public class CartServiceImpl implements CartService {
         Cart cart = getCartById(cartId);
         double total = 0;
 
-        // Calcular el total
         for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
             int quantity = item.getQuantity();
@@ -242,35 +240,25 @@ public class CartServiceImpl implements CartService {
             productRepository.save(product);
         }
 
-        // Obtener el usuario utilizando el userId del carrito
         User user = userService.getUserById(cart.getUserId());
 
-        // Convertir CartItem a OrderItemDTO
-        List<OrderItemDTO> orderItemsDTO = cart.getItems().stream()
+        List<OrderItem> orderItems = cart.getItems().stream()
             .map(cartItem -> {
-                OrderItemDTO orderItemDTO = OrderItemDTO.builder()
-                        .product(new ProductDTO(
-                                cartItem.getProduct().getId(),
-                                cartItem.getProduct().getName(),
-                                cartItem.getProduct().getDescription(),
-                                cartItem.getProduct().getPrice(),
-                                cartItem.getProduct().getStock(),
-                                cartItem.getProduct().getDiscount(),
-                                cartItem.getProduct().getCategory().getDescription())) // Aquí puedes obtener la descripción de la categoría
+                Product producto = productoService.getProductById(cartItem.getProduct().getId());
+                OrderItem orderItem = OrderItem.builder()
+                        .product(producto) 
                         .quantity(cartItem.getQuantity())
                         .build();
-                return orderItemDTO;
+                return orderItem;
             })
             .collect(Collectors.toList());
 
-        // Crear la nueva orden con OrderDTO
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setTotalPrice(total);
-        orderDTO.setUser(new UserDTO(user.getId(), user.getEmail(), user.getName()));
-        orderDTO.setItems(orderItemsDTO); // Asignar la lista de OrderItemsDTO
+        Order order = new Order();
+        order.setTotalPrice(total);
+        order.setUser(user);
+        order.setItems(orderItems); 
 
-        // Crear la orden
-        orderService.createOrder(orderDTO);
+        orderService.createOrder(order);
 
        
 
