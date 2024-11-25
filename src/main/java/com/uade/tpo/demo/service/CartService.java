@@ -3,6 +3,8 @@ package com.uade.tpo.demo.service;
 import java.util.List;
 import com.uade.tpo.demo.Entity.Cart;
 import com.uade.tpo.demo.Entity.dto.CartDTO;
+import com.uade.tpo.demo.Entity.dto.CartItemDTO;
+import com.uade.tpo.demo.Entity.dto.ProductDTO;
  
 public interface CartService {
     // Otros métodos ya existentes
@@ -15,8 +17,8 @@ public interface CartService {
     void removeProductFromCart(Long cartId, Long productId);
     void updateProductQuantityInCart(Long cartId, Long productId, int quantity);
     Double finishCart(Long cartId);
-    void incOne(Long cartId, Long productId);
-    void decOne(Long cartId, Long productId);
+    CartItemDTO incOne(Long cartId, Long productId);
+    CartItemDTO decOne(Long cartId, Long productId);
     void clearCart(Long cartId);
  
     // Nuevo método para obtener carrito por userId
