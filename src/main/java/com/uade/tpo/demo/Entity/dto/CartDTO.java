@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartDTO {
     private Long id;
-    private Long userId; // Agregar el campo userId
+    private Long userId; 
     private List<CartItemDTO> items;
 }
